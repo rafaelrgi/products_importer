@@ -58,6 +58,12 @@ namespace cssharp.Controllers
       return Ok(result);
     }
 
+    [HttpGet("test")]
+    public ActionResult<string> Test()
+    {
+      return Ok("Api is ready!");
+    }
+
     [HttpPost("upload")]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<string>> Upload(IFormFile file)
