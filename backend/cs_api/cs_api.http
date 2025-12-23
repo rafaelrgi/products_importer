@@ -1,0 +1,6 @@
+@cs_api_HostAddress = http://localhost:5094
+
+GET {{cs_api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

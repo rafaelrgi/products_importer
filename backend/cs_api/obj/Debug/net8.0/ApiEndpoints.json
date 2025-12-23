@@ -1,0 +1,66 @@
+[
+  {
+    "ContainingType": "cs_api.Routes\u002B\u003C\u003Ec",
+    "Method": "\u003CMapRoutes\u003Eb__0_0",
+    "RelativePath": "api",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "cs_api.Routes\u002B\u003C\u003Ec",
+    "Method": "\u003CMapRoutes\u003Eb__0_1",
+    "RelativePath": "api/exchange-rates",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "cs_api.Routes\u002B\u003C\u003Ec",
+    "Method": "\u003CMapRoutes\u003Eb__0_2",
+    "RelativePath": "api/products",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "cs_api.Routes\u002B\u003C\u003Ec",
+    "Method": "\u003CMapRoutes\u003Eb__0_3",
+    "RelativePath": "api/products/upload",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  }
+]
