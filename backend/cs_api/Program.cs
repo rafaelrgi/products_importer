@@ -1,8 +1,8 @@
-using cs_api;
-using cs_api.Controllers;
-using cs_api.Data;
-using cs_api.Repositories;
-using cs_api.Services;
+using cs_api.src.Application.Services;
+using cs_api.src.Infra;
+using cs_api.src.Infra.Repositories;
+using cs_api.src.Web;
+using cs_api.src.Web.Controllers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

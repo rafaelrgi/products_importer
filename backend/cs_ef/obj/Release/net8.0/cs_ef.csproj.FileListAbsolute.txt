@@ -122,3 +122,4 @@ D:\Repos\monorepos\products_importer\backend\cs_ef\obj\Release\net8.0\refint\cs_
 D:\Repos\monorepos\products_importer\backend\cs_ef\obj\Release\net8.0\cs_ef.pdb
 D:\Repos\monorepos\products_importer\backend\cs_ef\obj\Release\net8.0\cs_ef.genruntimeconfig.cache
 D:\Repos\monorepos\products_importer\backend\cs_ef\obj\Release\net8.0\ref\cs_ef.dll
+D:\Repos\monorepos\products_importer\backend\cs_ef\obj\Release\net8.0\staticwebassets.upToDateCheck.txt

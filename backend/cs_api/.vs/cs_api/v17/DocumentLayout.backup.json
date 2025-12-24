@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_api\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D8DECD57-D074-4FD6-B7DF-5F3313C3AD2A}|cs_api.csproj|d:\\repos\\monorepos\\products_importer\\backend\\cs_api\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D8DECD57-D074-4FD6-B7DF-5F3313C3AD2A}|cs_api.csproj|solutionrelative:services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D8DECD57-D074-4FD6-B7DF-5F3313C3AD2A}|cs_api.csproj|d:\\repos\\monorepos\\products_importer\\backend\\cs_api\\src\\web\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8DECD57-D074-4FD6-B7DF-5F3313C3AD2A}|cs_api.csproj|solutionrelative:src\\web\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D8DECD57-D074-4FD6-B7DF-5F3313C3AD2A}|cs_api.csproj|d:\\repos\\monorepos\\products_importer\\backend\\cs_api\\repositories\\productrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D8DECD57-D074-4FD6-B7DF-5F3313C3AD2A}|cs_api.csproj|solutionrelative:repositories\\productrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D8DECD57-D074-4FD6-B7DF-5F3313C3AD2A}|cs_api.csproj|d:\\repos\\monorepos\\products_importer\\backend\\cs_api\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D8DECD57-D074-4FD6-B7DF-5F3313C3AD2A}|cs_api.csproj|solutionrelative:controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D8DECD57-D074-4FD6-B7DF-5F3313C3AD2A}|cs_api.csproj|d:\\repos\\monorepos\\products_importer\\backend\\cs_api\\src\\web\\routes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D8DECD57-D074-4FD6-B7DF-5F3313C3AD2A}|cs_api.csproj|solutionrelative:src\\web\\routes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,41 +22,28 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ProductController.cs",
-              "DocumentMoniker": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_api\\Controllers\\ProductController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ProductController.cs",
-              "ToolTip": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_api\\Controllers\\ProductController.cs",
-              "RelativeToolTip": "Controllers\\ProductController.cs",
-              "ViewState": "AgIAACoAAAAAAAAAAAAzwE0AAAAgAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "Routes.cs",
+              "DocumentMoniker": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_api\\src\\Web\\Routes.cs",
+              "RelativeDocumentMoniker": "src\\Web\\Routes.cs",
+              "ToolTip": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_api\\src\\Web\\Routes.cs",
+              "RelativeToolTip": "src\\Web\\Routes.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-23T14:52:18.452Z",
+              "WhenOpened": "2025-12-24T17:33:06.048Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ProductService.cs",
-              "DocumentMoniker": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_api\\Services\\ProductService.cs",
-              "RelativeDocumentMoniker": "Services\\ProductService.cs",
-              "ToolTip": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_api\\Services\\ProductService.cs",
-              "RelativeToolTip": "Services\\ProductService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAFAAAAAAAAAA==",
+              "Title": "ProductController.cs",
+              "DocumentMoniker": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_api\\src\\Web\\Controllers\\ProductController.cs",
+              "RelativeDocumentMoniker": "src\\Web\\Controllers\\ProductController.cs",
+              "ToolTip": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_api\\src\\Web\\Controllers\\ProductController.cs",
+              "RelativeToolTip": "src\\Web\\Controllers\\ProductController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-23T15:03:53.884Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ProductRepository.cs",
-              "DocumentMoniker": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_api\\Repositories\\ProductRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\ProductRepository.cs",
-              "ToolTip": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_api\\Repositories\\ProductRepository.cs",
-              "RelativeToolTip": "Repositories\\ProductRepository.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAAcwD8AAAAyAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-23T15:40:18.696Z",
+              "WhenOpened": "2025-12-24T17:33:34.62Z",
               "EditorCaption": ""
             }
           ]

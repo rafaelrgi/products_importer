@@ -3,16 +3,8 @@
   "WorkspaceRootPath": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_ef\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DB61422C-92F8-42EB-BC45-A588943DD646}|cs_ef.csproj|d:\\repos\\monorepos\\products_importer\\backend\\cs_ef\\repositories\\productrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB61422C-92F8-42EB-BC45-A588943DD646}|cs_ef.csproj|solutionrelative:repositories\\productrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB61422C-92F8-42EB-BC45-A588943DD646}|cs_ef.csproj|d:\\repos\\monorepos\\products_importer\\backend\\cs_ef\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB61422C-92F8-42EB-BC45-A588943DD646}|cs_ef.csproj|solutionrelative:services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB61422C-92F8-42EB-BC45-A588943DD646}|cs_ef.csproj|d:\\repos\\monorepos\\products_importer\\backend\\cs_ef\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB61422C-92F8-42EB-BC45-A588943DD646}|cs_ef.csproj|solutionrelative:controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DB61422C-92F8-42EB-BC45-A588943DD646}|cs_ef.csproj|d:\\repos\\monorepos\\products_importer\\backend\\cs_ef\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB61422C-92F8-42EB-BC45-A588943DD646}|cs_ef.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,45 +14,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ProductController.cs",
-              "DocumentMoniker": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_ef\\Controllers\\ProductController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ProductController.cs",
-              "ToolTip": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_ef\\Controllers\\ProductController.cs",
-              "RelativeToolTip": "Controllers\\ProductController.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAwwE0AAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-21T20:57:58.371Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ProductService.cs",
-              "DocumentMoniker": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_ef\\Services\\ProductService.cs",
-              "RelativeDocumentMoniker": "Services\\ProductService.cs",
-              "ToolTip": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_ef\\Services\\ProductService.cs",
-              "RelativeToolTip": "Services\\ProductService.cs",
-              "ViewState": "AgIAAFgAAAAAAAAAAAAxwHUAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-21T21:08:33.722Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ProductRepository.cs",
-              "DocumentMoniker": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_ef\\Repositories\\ProductRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\ProductRepository.cs",
-              "ToolTip": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_ef\\Repositories\\ProductRepository.cs",
-              "RelativeToolTip": "Repositories\\ProductRepository.cs",
-              "ViewState": "AgIAAEkAAAAAAAAAAIA9wF8AAAAQAAAAAAAAAA==",
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_ef\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\Repos\\monorepos\\products_importer\\backend\\cs_ef\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-21T21:08:59.256Z",
+              "WhenOpened": "2025-12-24T17:28:54.679Z",
               "EditorCaption": ""
             }
           ]
