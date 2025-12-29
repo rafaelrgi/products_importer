@@ -1,5 +1,5 @@
 ﻿using cs_ef.src.Domain.Contracts;
-using cs_ef.src.Domain.Models;
+using cs_ef.src.Domain.Entities;
 using System.Text.Json;
 
 namespace cs_ef.src.Application.Services
@@ -9,8 +9,8 @@ namespace cs_ef.src.Application.Services
     private const string URL_API = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json";
     private const string URL_API_2 = "https://latest.currency-api.pages.dev/v1/currencies/usd.json";
 
-    IExchangeRateRepository _repository;
-    HttpClient _httpClient;
+    readonly IExchangeRateRepository _repository;
+    readonly HttpClient _httpClient;
 
     public ExchangeRateService(IExchangeRateRepository repository, HttpClient httpClient)
     {
@@ -28,7 +28,7 @@ namespace cs_ef.src.Application.Services
       var db_rates = await _GetToday5RatesDb();
       if (db_rates != null && db_rates.Any())
         return db_rates;
-      
+
       var rates = await _GetToday5RatesApi(URL_API);
       if (rates != null && rates.Any())
       {
@@ -43,7 +43,7 @@ namespace cs_ef.src.Application.Services
 
     private async Task _SaveRates(ExchangeRate[] rates)
     {
-        await _repository.SaveRates(rates);
+      await _repository.SaveRates(rates);
     }
 
     private async Task<ExchangeRate[]> _GetToday5RatesApi(string url)

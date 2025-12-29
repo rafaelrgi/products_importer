@@ -1,4 +1,4 @@
-﻿using cs_ef.src.Domain.Models;
+﻿using cs_ef.src.Domain.Entities;
 
 namespace cs_ef.src.Domain.Contracts
 {

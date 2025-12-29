@@ -1,6 +1,6 @@
 ﻿using cs_ef.src.Data;
 using cs_ef.src.Domain.Contracts;
-using cs_ef.src.Domain.Models;
+using cs_ef.src.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace cs_ef.src.Infra.Repositories

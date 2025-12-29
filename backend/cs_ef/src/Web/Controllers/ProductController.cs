@@ -1,9 +1,8 @@
-﻿using cs_ef.src.Application.Services;
-using cs_ef.src.Domain.Contracts;
-using cs_ef.src.Domain.Models;
+﻿using cs_ef.src.Domain.Contracts;
+using cs_ef.src.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
-using System.Text;
 
 namespace cs_ef.src.Web.Controllers
 {
@@ -11,10 +10,13 @@ namespace cs_ef.src.Web.Controllers
   [ApiController]
   public class ProductController : Controller
   {
-    private readonly IProductService _service;
-    public ProductController(IProductService service)
+    readonly IProductService _service;
+    readonly IImportProductService _importer;
+
+    public ProductController(IProductService service, IImportProductService importer)
     {
-      _service = (ProductService)service;
+      _service = service;
+      _importer = importer;
     }
 
     [HttpGet]
@@ -44,8 +46,7 @@ namespace cs_ef.src.Web.Controllers
       //filters: name, PriceMin, PriceMax, ExpirationMin, ExpirationMax
       string? name = HttpContext.Request.Query["name"];
 
-      decimal d;
-      decimal? priceMin = decimal.TryParse(HttpContext.Request.Query["priceMin"], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out d) ? d : null;
+      decimal? priceMin = decimal.TryParse(HttpContext.Request.Query["priceMin"], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out decimal d) ? d : null;
       decimal? priceMax = decimal.TryParse(HttpContext.Request.Query["priceMax"], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out d) ? d : null;
 
       DateTime dt;
@@ -59,6 +60,15 @@ namespace cs_ef.src.Web.Controllers
       return Ok(result);
     }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Product?>> Details(int id)
+    {
+      Product? row = await _service.Find(id);
+      if (row == null)
+        return NotFound();
+
+      return Ok(row);
+    }
     [HttpGet("test")]
     public ActionResult<string> Test()
     {
@@ -66,6 +76,7 @@ namespace cs_ef.src.Web.Controllers
     }
 
     [HttpPost("upload")]
+    [Authorize(Roles = "Admin")]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<string>> Upload(IFormFile file)
     {
@@ -76,7 +87,7 @@ namespace cs_ef.src.Web.Controllers
       int rejected = 0;
       try
       {
-        (lines, rejected) = await _service.ImportCsv(file);
+        (lines, rejected) = await _importer.ImportCsv(file);
       }
       catch (Exception e)
       {
@@ -85,5 +96,72 @@ namespace cs_ef.src.Web.Controllers
 
       return Ok($"{lines - 1} rows processed :: {rejected} rows rejected");
     }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> Delete(int id)
+    {
+      if (!await _service.Delete(id))
+        return NotFound();
+      return NoContent();
+    }
+    
+    [HttpPatch("activate/{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> UnDelete(int id)
+    {
+      if (!await _service.UnDelete(id))
+        return NotFound();
+      return NoContent();
+    }
+
+    //UNDONE: Pdf report (filters = Index)
+    //UNDONE: Create
+    /*
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    //[AllowAnonymous]
+    public async Task<ActionResult> Create([FromBody] User user)
+    {
+      if (!ModelState.IsValid)
+        return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+
+      try
+      {
+        var dto = await _service.Save(user);
+        var uri = new Uri($"api/users/{dto.Id}", UriKind.Relative);
+        return Created(uri, dto);
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine(e.ToString());
+        throw new Exception(e.Message);
+      }
+    }     
+     */
+    //UNDONE: Update
+    /*
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> Edit(int id, [FromBody] User user)
+    {
+      if (!ModelState.IsValid)
+        return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+
+      user.Id = id;
+      try
+      {
+        var dto = await _service.Save(user);
+        return Ok(dto);
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine(e.ToString());
+        throw new NotImplementedException();
+      }
+    } 
+    */
+
+    //UNDONE: logs
   }
 }

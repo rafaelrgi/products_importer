@@ -1,6 +1,6 @@
 ﻿using cs_ef.src.Application.Services;
 using cs_ef.src.Domain.Contracts;
-using cs_ef.src.Domain.Models;
+using cs_ef.src.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cs_ef.src.Web.Controllers
@@ -9,7 +9,8 @@ namespace cs_ef.src.Web.Controllers
   [Route("api/exchange-rates")]
   public class ExchangeRateController : Controller
   {
-    private readonly IExchangeRateService _service;
+    readonly IExchangeRateService _service;
+
     public ExchangeRateController(IExchangeRateService service)
     {
       _service = (ExchangeRateService)service;
@@ -24,6 +25,7 @@ namespace cs_ef.src.Web.Controllers
 
       return Ok(rates);
     }
+        
   }
 
 }

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace cs_ef.src.Domain.Models
+namespace cs_ef.src.Domain.Entities
 {
   [Table("exchange_rate")]
   public class ExchangeRate

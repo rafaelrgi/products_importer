@@ -1,7 +1,7 @@
 ﻿using cs_ef.src.Data;
 using cs_ef.src.Domain.Contracts;
 using cs_ef.src.Domain.Core;
-using cs_ef.src.Domain.Models;
+using cs_ef.src.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace cs_ef.src.Infra.Repositories
@@ -99,6 +99,28 @@ namespace cs_ef.src.Infra.Repositories
       }
     }
 
+    public async Task<Product?> Find(int id, bool ignoreDeleted = true)
+    {
+      var qry = _db.Products.AsQueryable();
+      if (!ignoreDeleted)
+        qry = qry.IgnoreQueryFilters();
+
+      return await qry.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<bool> Delete(Product row)
+    {
+      row.DeletedAt = DateTime.Now;
+      _db.Products.Update(row);
+      return (await _db.SaveChangesAsync() > 0);
+    }
+
+    public async Task<bool> UnDelete(Product row)
+    {
+      row.DeletedAt = null;
+      _db.Products.Update(row);
+      return (await _db.SaveChangesAsync() > 0);
+    }
   }
 
 }
