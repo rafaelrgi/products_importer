@@ -20,9 +20,6 @@ namespace cs_ef.src.Domain.Entities
     [Required]
     public DateTime Expiration { get; set; }
 
-    [Required]
-    public DateTime CreatedAt { get; set; }
-
     // Brazilian Reais  
     public decimal BRL { get; set; }
 

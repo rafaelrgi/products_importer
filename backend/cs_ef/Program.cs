@@ -16,13 +16,16 @@ builder.Services.AddDbContext<Db>(options =>
   options.UseMySQL(builder.Configuration.GetConnectionString(Db.ConnectionName)!);
 });
 
+using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+
+
 // Add services to the container.
 builder.Services.AddTransient<HttpClient, HttpClient>();
 builder.Services.AddScoped<IExchangeRateRepository, ExchangeRateRepository>();
 builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IImportProductService, ImportProductService>();
+builder.Services.AddScoped<IProductImporterService, ProductImporterService>();
 
 // Authorization
 var publicKey = builder.Configuration["RsaKeys:PublicKey"] ?? "";

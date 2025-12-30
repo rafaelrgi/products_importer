@@ -8,10 +8,12 @@ namespace cs_ef.src.Infra.Repositories
   public class ExchangeRateRepository : IExchangeRateRepository
   {
     private readonly Db _db;
+    readonly ILogger<ExchangeRateRepository> _logger;
 
-    public ExchangeRateRepository(Db db)
+    public ExchangeRateRepository(Db db, ILogger<ExchangeRateRepository> logger)
     {
       _db = db;
+      _logger = logger;
     }
 
     public async Task<List<ExchangeRate>> FindAll()
@@ -47,11 +49,12 @@ namespace cs_ef.src.Infra.Repositories
         }
         await _db.SaveChangesAsync();
       }
-      catch (Exception)
+      catch (Exception ex)
       {
+        _logger.LogError(ex.ToString());
         return false;
       }
-      return true;  
+      return true;
     }
 
   }

@@ -10,5 +10,6 @@ namespace cs_ef.src.Domain.Contracts
     Task<bool> SaveProducts(Product[] products, int count);
     Task<bool> Delete(Product row);
     Task<bool> UnDelete(Product row);
+    Task<bool> Save(Product row);
   }
 }

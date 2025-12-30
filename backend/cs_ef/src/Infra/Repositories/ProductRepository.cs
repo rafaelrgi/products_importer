@@ -8,11 +8,13 @@ namespace cs_ef.src.Infra.Repositories
 {
   public class ProductRepository : IProductRepository
   {
-    private readonly Db _db;
+    readonly Db _db;
+    readonly ILogger<ProductRepository> _logger;
 
-    public ProductRepository(Db db)
+    public ProductRepository(Db db, ILogger<ProductRepository> logger)
     {
       _db = db;
+      _logger = logger;
     }
 
     public async Task<Pagination<Product>> FindAll(int page, int perPage, string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
@@ -30,7 +32,7 @@ namespace cs_ef.src.Infra.Repositories
         .Skip(skip)
         .Take(perPage);
 
-      //Console.WriteLine(qry.ToQueryString());
+      //_logger.LogInformation(qry.ToQueryString());
       var rows = await qry.AsNoTracking().ToListAsync();
 
       var result = new Pagination<Product>();
@@ -82,7 +84,7 @@ namespace cs_ef.src.Infra.Repositories
         if (product.Id == 0)
           await _db.Products.AddAsync(product);
         else
-          _db.Products.Attach(product);
+          _db.Products.Update(product);
         if (++n >= count)
           break;
       }
@@ -92,9 +94,9 @@ namespace cs_ef.src.Infra.Repositories
         await _db.SaveChangesAsync();
         return true;
       }
-      catch (Exception e)
+      catch (Exception ex)
       {
-        Console.WriteLine(e.Message);
+        _logger.LogError(ex.ToString());
         return false;
       }
     }
@@ -121,6 +123,17 @@ namespace cs_ef.src.Infra.Repositories
       _db.Products.Update(row);
       return (await _db.SaveChangesAsync() > 0);
     }
+
+    public async Task<bool> Save(Product row)
+    {
+      if (row.Id == 0)
+        await _db.Products.AddAsync(row);
+      else
+        _db.Products.Update(row);
+
+      return await _db.SaveChangesAsync() > 0;
+    }
+
   }
 
 }

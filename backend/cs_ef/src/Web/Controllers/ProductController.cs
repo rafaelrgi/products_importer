@@ -6,17 +6,21 @@ using System.Globalization;
 
 namespace cs_ef.src.Web.Controllers
 {
-  [Route("api/products")]
+  [Route($"{ROUTE}")]
   [ApiController]
   public class ProductController : Controller
   {
-    readonly IProductService _service;
-    readonly IImportProductService _importer;
+    const string ROUTE = "api/products";
 
-    public ProductController(IProductService service, IImportProductService importer)
+    readonly IProductService _service;
+    readonly IProductImporterService _importer;
+    readonly ILogger<ProductController> _logger;
+
+    public ProductController(IProductService service, IProductImporterService importer, ILogger<ProductController> logger)
     {
       _service = service;
       _importer = importer;
+      _logger = logger;
     }
 
     [HttpGet]
@@ -69,12 +73,69 @@ namespace cs_ef.src.Web.Controllers
 
       return Ok(row);
     }
-    [HttpGet("test")]
-    public ActionResult<string> Test()
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> Create([FromBody] Product row)
     {
-      return Ok("Api is ready!");
+      if (!ModelState.IsValid)
+        return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+
+      try
+      {
+        if (! await _service.Save(row))
+          return BadRequest("Unable to create record");
+
+        var uri = new Uri($"{ROUTE}/{row.Id}", UriKind.Relative);
+        return Created(uri, row);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex.ToString());
+        throw new Exception(ex.Message);
+      }
+    }     
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]    
+    public async Task<ActionResult> Edit(int id, [FromBody] Product row)
+    {
+      if (!ModelState.IsValid)
+        return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+
+      row.Id = id;
+      try
+      {
+        if (! await _service.Save(row))
+          return BadRequest("Unable to save record");
+
+        return Ok(row);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex.ToString());
+        throw new NotImplementedException();
+      }
+    } 
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> Delete(int id)
+    {
+      if (!await _service.Delete(id))
+        return NotFound();
+      return NoContent();
     }
 
+    [HttpPatch("activate/{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> UnDelete(int id)
+    {
+      if (!await _service.UnDelete(id))
+        return NotFound();
+      return NoContent();
+    }
+    
     [HttpPost("upload")]
     [Authorize(Roles = "Admin")]
     [Consumes("multipart/form-data")]
@@ -89,79 +150,18 @@ namespace cs_ef.src.Web.Controllers
       {
         (lines, rejected) = await _importer.ImportCsv(file);
       }
-      catch (Exception e)
+      catch (Exception ex)
       {
-        return StatusCode(500, e.Message);
+        _logger.LogError(ex.ToString());
+        return StatusCode(500, ex.Message);
       }
 
-      return Ok($"{lines - 1} rows processed :: {rejected} rows rejected");
-    }
-
-    [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<ActionResult> Delete(int id)
-    {
-      if (!await _service.Delete(id))
-        return NotFound();
-      return NoContent();
+      var s = $"{file.FileName}: {lines - 1} rows processed :: {rejected} rows rejected";
+      _logger.LogInformation(s);
+      return Ok(s);
     }
     
-    [HttpPatch("activate/{id}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<ActionResult> UnDelete(int id)
-    {
-      if (!await _service.UnDelete(id))
-        return NotFound();
-      return NoContent();
-    }
-
     //UNDONE: Pdf report (filters = Index)
-    //UNDONE: Create
-    /*
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
-    //[AllowAnonymous]
-    public async Task<ActionResult> Create([FromBody] User user)
-    {
-      if (!ModelState.IsValid)
-        return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
 
-      try
-      {
-        var dto = await _service.Save(user);
-        var uri = new Uri($"api/users/{dto.Id}", UriKind.Relative);
-        return Created(uri, dto);
-      }
-      catch (Exception e)
-      {
-        Console.WriteLine(e.ToString());
-        throw new Exception(e.Message);
-      }
-    }     
-     */
-    //UNDONE: Update
-    /*
-    [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<ActionResult> Edit(int id, [FromBody] User user)
-    {
-      if (!ModelState.IsValid)
-        return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
-
-      user.Id = id;
-      try
-      {
-        var dto = await _service.Save(user);
-        return Ok(dto);
-      }
-      catch (Exception e)
-      {
-        Console.WriteLine(e.ToString());
-        throw new NotImplementedException();
-      }
-    } 
-    */
-
-    //UNDONE: logs
   }
 }

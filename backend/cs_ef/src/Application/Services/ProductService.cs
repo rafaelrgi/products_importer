@@ -1,6 +1,7 @@
 ﻿using cs_ef.src.Domain.Contracts;
 using cs_ef.src.Domain.Core;
 using cs_ef.src.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace cs_ef.src.Application.Services
 {
@@ -42,6 +43,11 @@ namespace cs_ef.src.Application.Services
         return false;
 
       return await _repository.UnDelete(row);
+    }
+
+    public async Task<bool> Save(Product row)
+    {
+      return await _repository.Save(row);
     }
   }
 }
