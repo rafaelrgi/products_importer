@@ -20,11 +20,16 @@ namespace cs_ef.src.Application.Services
       return row;
     }
 
-    public async Task<Pagination<Product>> FindAll(int page, int perPage, string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
+    public async Task<List<Product>> FindAll(string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
+    {
+      return await _repository.FindAll(sort, order, name, priceMin, priceMax, expirationMin, expirationMax);
+    }
+
+    public async Task<Pagination<Product>> FindAllPaginated(int page, int perPage, string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
     {
       page = Math.Max(page, 1);
       perPage = Math.Max(perPage, 2);
-      return await _repository.FindAll(page, perPage, sort, order, name, priceMin, priceMax, expirationMin, expirationMax);
+      return await _repository.FindAllPaginated(page, perPage, sort, order, name, priceMin, priceMax, expirationMin, expirationMax);
     }
 
     public async Task<bool> Delete(int id)

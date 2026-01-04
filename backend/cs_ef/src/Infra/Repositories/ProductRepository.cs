@@ -17,7 +17,21 @@ namespace cs_ef.src.Infra.Repositories
       _logger = logger;
     }
 
-    public async Task<Pagination<Product>> FindAll(int page, int perPage, string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
+    public async Task<List<Product>> FindAll(string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
+    {
+      var qry = _db.Products.AsQueryable();
+      qry = _ApplyFilters(name, priceMin, priceMax, expirationMin, expirationMax, qry);
+
+      //order
+      qry = _ApplyOrderBy(sort, order, qry);
+
+      //_logger.LogInformation(qry.ToQueryString());
+      var rows = await qry.AsNoTracking().ToListAsync();
+
+      return rows;
+    }
+
+    public async Task<Pagination<Product>> FindAllPaginated(int page, int perPage, string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
     {
       var qry = _db.Products.AsQueryable();
       qry = _ApplyFilters(name, priceMin, priceMax, expirationMin, expirationMax, qry);

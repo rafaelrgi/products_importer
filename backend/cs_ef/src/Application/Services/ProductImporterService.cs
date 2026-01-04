@@ -1,11 +1,9 @@
-﻿using cs_ef.src.Domain.Contracts;
+﻿using System.Text;
+using System.Text.RegularExpressions;
+using System.Globalization;
+using cs_ef.src.Domain.Contracts;
 using cs_ef.src.Domain.Entities;
 using cs_ef.src.Infra.Repositories;
-using cs_ef.src.Web.Controllers;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace cs_ef.src.Application.Services
 {

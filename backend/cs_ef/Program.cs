@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
+using QuestPDF.Infrastructure;
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,11 +60,22 @@ builder.Services.AddAuthorization(options =>
       .Build();
 });
 
+//Cors configuration
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy("AllowAngularApp",
+      builder =>
+      {
+        builder.WithOrigins("http://localhost:4200")
+                 .AllowAnyHeader()
+                 .AllowAnyMethod();
+      });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseAuthorization();
-
 app.MapControllers();
-
+app.UseCors("AllowAngularApp");
 app.Run();
