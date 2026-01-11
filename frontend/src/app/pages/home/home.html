@@ -1,0 +1,8 @@
+<h2>Status</h2>
+
+<p>Status: {{ apiStatus?.status }}</p>
+<p>IsAuth: {{ apiStatus?.isAuth }}</p>
+<p>IsDocker: {{ apiStatus?.isDocker }}</p>
+<p>
+  User: {{ apiStatus?.user?.name }} [{{ apiStatus?.user?.isAdmin? "Admin" : "User" }}]
+</p>

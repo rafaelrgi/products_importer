@@ -1,0 +1,20 @@
+<div class="backdrop">
+  <div class="form-container">
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <br>
+      <h2>Login</h2>
+      <span class="txt-error form-error">{{ formError }} &nbsp;</span><br>
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Email" formControlName="email" required autofocus>
+      <span class="txt-error">{{ emailError }}</span><br>
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Password" formControlName="password" required>
+      <span class="txt-error">{{ passwordError }}</span><br>
+      <br>
+      <div class="btn-group">
+        <button class="btn btn-primary" type="submit">Log in</button>
+      </div>
+      <br>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+@if (user) {
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <h2>{{ ownProfile? "My profile" : "User " + id }}</h2>
+  <span class="txt-error form-error">{{ error }} &nbsp;</span><br>
+
+  <label for="name">Name*</label>
+  <input type="text" id="name" value="{{user.name}}" formControlName="name" required autofocus>
+  <span class="txt-error">{{ nameError }}</span><br>
+  <label for="email">Email*</label>
+  <input type="email" id="email" value={{user.email}} formControlName="email" required>
+  <span class="txt-error">{{ emailError }}</span><br>
+  <button type="button" title="Activate/Deactivate the user" class="btn flat {{isAdmin()? '' : 'disabled'}}"
+    (click)="setIsDeleted()">
+    <i class="material-icons">{{user.isDeleted? "check_box_outline_blank" : "check_box"}} </i>
+    &nbsp; Active
+  </button>
+  <br>
+  <button type="button" title="Change user role (Admin/User)" class="btn flat {{isAdmin()? '' : 'disabled'}}"
+    (click)="setIsAdmin()">
+    <i class="material-icons">{{user.isAdmin? "check_box" : "check_box_outline_blank"}} </i>
+    &nbsp; Admin
+  </button>
+  <br>
+
+  <label for="createdAt">Created at</label>
+  <input type="text" id="createdAt" value="{{user.createdAt | date:'dd/MM/yyyy HH:mm'}}" readonly>
+  <br>
+  <label for="updatedAt">Updated at</label>
+  <input type="text" id="updatedAt" value="{{user.updatedAt | date:'dd/MM/yyyy HH:mm'}}" readonly>
+  <br>
+
+  @if (ownProfile || isChangingPassword) {
+  <br>
+  <fieldset>
+    <legend>
+      @if (ownProfile) {
+      <button type="button" class="btn flat" (click)="setChangePassword()">
+        <i class="material-icons">{{isChangingPassword? "check_box" : "check_box_outline_blank" }} </i>
+        &nbsp; Change password
+      </button>
+      } @else {
+      Password
+      }
+    </legend>
+
+    <div [class.hidden]="!isChangingPassword">
+      @if (ownProfile) {
+      <label for="password">Current password*</label>
+      <input type="password" id="password" placeholder="Password" formControlName="password">
+      <span class="txt-error">{{ passwordOldError }}</span><br>
+      }
+
+      <label for="passwordNew">New password*</label>
+      <input type="password" id="passwordNew" placeholder="Password" formControlName="passwordNew">
+      <span class="txt-error">{{ passwordNewError }}</span><br>
+
+      <label for="passwordCheck">Confirm new password*</label>
+      <input type="password" id="passwordCheck" placeholder="Password" formControlName="passwordCheck">
+      <span class="txt-error">{{ passwordNewError }}</span><br>
+    </div>
+
+
+  </fieldset>
+  <br>
+  }
+
+  <br>
+  <div class="btn-group">
+    <button class="btn btn-primary" type="submit">Save</button>
+  </div>
+  <br>
+</form>
+
+}

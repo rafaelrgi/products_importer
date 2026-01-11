@@ -1,0 +1,57 @@
+@if (this.status !== PageStatus.Loading && this.status !== PageStatus.None) {
+<div>
+  <h2>Users</h2>
+</div>
+}
+
+@if (this.status === PageStatus.Error) {
+<div class="txt-error">
+  {{ this.error }}
+</div>
+}
+
+@if (this.status === PageStatus.Empty) {
+<div class="txt-message">
+  No records found
+</div>
+<br>
+<button class="btn btn-success" (click)="add()">Add a new record</button>
+}
+
+@else if (this.status === PageStatus.Ready){
+
+<table>
+  <tr>
+    <th width="10%">Id</th>
+    <th width="30%">Name</th>
+    <th width="30%">Email</th>
+    <th width="10%">Role</th>
+    <th width="10%">Status</th>
+    <th class="btn" width="10%">
+      <button title="Add new User" class="btn btn-success icon material-icons" (click)="add()">add</button>
+    </th>
+  </tr>
+  @for (user of this.users; track user.id) {
+  <tr>
+    <td>{{ user.id }}</td>
+    <td>{{ user.name }} </td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.isAdmin? "Admin" : "User" }}</td>
+    <td>{{ user.isDeleted? "Blocked" : "Active" }}</td>
+    <td class="btn">
+      &nbsp;
+      <button title="Details/Edit" class="btn btn-info icon material-icons" (click)="edit(user.id)">edit</button>
+      &nbsp;
+      @if (user.isDeleted) {
+      <button title="Unblock/Restore" class="btn btn-warning icon material-icons"
+        (click)="undelete(user.id)">restore_from_trash</button>
+      } @else {
+      <button title="Block/Delete" class="btn btn-danger icon material-icons" (click)="delete(user.id)">delete</button>
+      }
+    </td>
+  </tr>
+  } <!-- for (user of this.users; track user.id) -->
+</table>
+
+
+} <!-- if (this.users) -->

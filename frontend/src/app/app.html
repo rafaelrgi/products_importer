@@ -1,0 +1,22 @@
+@if (this.isAuth()) {
+<div class="header">
+  @if (getUser()) {
+  <div class="user"><i class="material-icons">person</i> {{ getUser()?.name }}</div>
+  }
+
+  <div class="logo-container">
+    <button class="logo" (click)="toggleCollapse()">
+      <i class="material-icons">menu</i>
+    </button>
+  </div>
+  <h1>Products</h1>
+</div>
+
+<app-menu [isMenuCollapsed]="isMenuCollapsed()" (changeIsMenuCollapsed)="isMenuCollapsed.set($event)"></app-menu>
+}
+
+<app-loading></app-loading>
+
+<div id="content" [class]="isMenuCollapsed() ? 'menu-collapsed' : ''">
+  <router-outlet />
+</div>

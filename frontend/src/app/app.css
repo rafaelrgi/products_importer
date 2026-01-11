@@ -1,0 +1,87 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', 'Segoe UI', Tahoma, Verdana, sans-serif;
+}
+
+.header i.material-icons {
+  font-family: 'Material Icons' !important;
+  font-size: 20px !important;
+  margin-top: -3px;
+  vertical-align: middle;
+}
+
+.header {
+  z-index: 256;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  padding: 1em;
+  color: aliceblue;
+  background: #012a5b;
+}
+
+.header h1 {
+  text-align: center;
+  margin: 0.2em;
+}
+
+div#content {
+  overflow: hide;
+  width: 100;
+  margin-top: 6rem;
+  margin-left: 15rem;
+  padding: 0.2rem 1rem;
+  transition: margin-left 0.5s ease;
+}
+
+.header .logo-container button.logo {
+  display: none;
+}
+
+.header .user {
+  float: right;
+  margin: 5px;
+  vertical-align: middle;
+}
+
+/*---------------------------------------------------------------------------*/
+@media screen and (max-width: 768px) {
+  .header h1 {
+    text-align: left;
+    margin: 0.2em 4rem;
+  }
+
+  .header .logo-container {
+    float: left;
+    align-items: center;
+    padding: 0;
+  }
+
+  .header .logo-container button.logo {
+    display: inline-block;
+    background: transparent;
+    color: #fff;
+    text-align: center;
+    width: 3rem;
+    min-width: 3rem;
+    border-radius: 0.313rem;
+    font-size: 28px;
+    font-weight: 900;
+    cursor: pointer;
+    border: none;
+  }
+
+  .header .logo-container .logo-text {
+    margin-left: 1.5rem;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  div#content {
+    margin-left: 0;
+  }
+}

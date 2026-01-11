@@ -1,0 +1,13 @@
+<div class="sidenav" [ngClass]="isMenuCollapsed() ? 'sidenav-collapsed' : ''">
+  <div class="sidenav-nav">
+    @for (item of items; track $index) {
+    <li class="sidenav-nav-item">
+      <a class="sidenav-nav-link" [routerLink]="item.routeLink" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <i class="sidenav-link-icon material-icons">{{item.icon}}</i>
+        <span class="sidenav-link-text">{{ item.label }}</span>
+      </a>
+    </li>
+    }
+  </div>
+</div>
