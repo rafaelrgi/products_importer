@@ -1,8 +1,44 @@
+.hidden {
+  display: none;
+
+}
+
+table {
+  border-collapse: collapse;
+}
+
+tr:nth-child(even) {
+  background-color: #eee;
+}
+
+table th,
+table td {
+  text-align: left;
+  white-space: nowrap;
+}
+
+table th.btn,
+table td.btn {
+  text-align: right;
+}
+
+i.material-icons {
+  font-family: 'Material Icons' !important;
+  vertical-align: bottom;
+  /*
+  font-size: 20px !important;
+  margin-top: -3px;
+  vertical-align: middle;
+  */
+}
+
 /*---------------------------------------------------------------------------*/
 /*        Forms       */
+form {
+  max-width: 40rem;
+}
 
 form h2 {
-  text-align: center;
   margin-block-start: 0;
   margin-block-end: 0.5em;
 }
@@ -22,25 +58,98 @@ form input {
   border-radius: 4px;
 }
 
+form input:read-only {
+  background-color: #f6f6f6;
+}
+
 form .btn-group {
   text-align: center;
 }
 
 .btn {
   cursor: pointer;
-  padding: 6px 16px;
-  min-width: 8em;
   border-radius: 4px;
+}
+
+.btn.disabled {
+  cursor: not-allowed;
+  border-radius: 4px;
+}
+
+
+.btn {
+  min-width: 8em;
+  padding: 6px 16px;
+  border: 0;
+}
+
+.btn.icon {
+  min-width: 0;
+  width: 1.5em;
+  padding: 2px;
+}
+
+.btn.flat {
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
 }
 
 .btn-primary {
   color: #fff !important;
-  background-color: #012a5b !important;
-  border: 2px solid #002047 !important;
+  background-color: #004ead !important;
+  border: 2px solid #004ead !important;
 }
 
 .btn-primary:hover {
-  background-color: #004ead !important;
+  background-color: #012a5b !important;
+  border-color: #012a5b !important;
+}
+
+.btn-danger {
+  color: #fff !important;
+  background-color: #b40600 !important;
+  border: 2px solid #b40600 !important;
+}
+
+.btn-warning {
+  color: #fff !important;
+  background-color: #cf6f00 !important;
+  border: 2px solid #cf6f00 !important;
+}
+
+.btn-success {
+  color: #fff !important;
+  background-color: #00a000 !important;
+  border: 2px solid #00a000 !important;
+}
+
+.btn-info {
+  color: #fff !important;
+  background-color: #7801c7 !important;
+  border: 2px solid #7801c7 !important;
+}
+
+.btn-danger:hover {
+  background-color: #8f0500 !important;
+  border-color: #8f0500 !important;
+}
+
+.btn-warning:hover {
+  background-color: #b35f01 !important;
+  border-color: #b35f01 !important;
+}
+
+.btn-success:hover {
+  background-color: #367e36 !important;
+  border-color: #367e36 !important;
+}
+
+.btn-info:hover {
+  background-color: #580092 !important;
+  border-color: #580092 !important;
 }
 
 .anchor:hover {
@@ -48,12 +157,23 @@ form .btn-group {
   cursor: grab;
 }
 
-.txt-error {
-  color: red;
-}
 
-.txt-error.form-error {
+.txt-error,
+.txt-message {
   display: block;
   width: 100%;
+  font-size: 1.4em;
+}
+
+form .txt-error,
+form .txt-message {
+  font-size: 1.05em;
+}
+
+form .form-error {
   text-align: center;
+}
+
+.txt-error {
+  color: red;
 }

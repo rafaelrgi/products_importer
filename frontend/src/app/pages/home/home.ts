@@ -3,7 +3,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { ApiService } from '../../services/api';
 import { AuthService } from '../../services/auth';
 import { ApiStatus } from '../../dtos/api_status.dto';
-import { User } from "./../../dtos/user.dto";
+import { User } from './../../dtos/user.dto';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +19,10 @@ export class Home implements OnInit {
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   ngOnInit(): void {
+    this.fetchApiStatus();
+  }
+
+  private fetchApiStatus() {
     this.apiService.getStatus().subscribe({
       //success
       next: (response) => {
@@ -35,12 +39,11 @@ export class Home implements OnInit {
       error: (error) => {
         this.apiStatus = <ApiStatus>{
           status: `Error ${error.status}: ${error.message}`,
-          baseDir: "",
+          baseDir: '',
           isAuth: false,
           isDocker: false,
           user: <User>{}
         };
-        console.error('Error calling server:', error);
         this.cdRef.detectChanges();
       }
     });

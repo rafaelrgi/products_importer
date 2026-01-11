@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth';
 
 
 @Component({
@@ -12,6 +13,13 @@ import { RouterModule } from '@angular/router';
 export class Menu {
   isMenuCollapsed = input.required<boolean>();
   changeIsMenuCollapsed = output<boolean>();
+
+  constructor(private authService: AuthService) { }
+
+  ngOnInit(): void {
+    if (!this.authService.isAdmin())
+      this.items[2].label = 'Profile';
+  }
 
   toggleCollapse(): void {
     this.changeIsMenuCollapsed.emit(!this.isMenuCollapsed());
@@ -35,7 +43,7 @@ export class Menu {
     {
       routeLink: 'users',
       icon: 'groups',
-      label: 'Users',
+      label: 'Users'
     },
     {
       routeLink: 'login',
