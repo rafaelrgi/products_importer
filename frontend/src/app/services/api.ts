@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiStatus } from './../dtos/api_status.dto';
-import { environment } from './../../environments/environment';
+import { ApiStatus } from '../dtos/api_status.dto';
+import { environment } from "./../../environments/environment";
 
 @Injectable({
   providedIn: 'root',

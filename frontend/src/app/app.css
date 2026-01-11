@@ -5,7 +5,7 @@
   font-family: 'Roboto', 'Segoe UI', Tahoma, Verdana, sans-serif;
 }
 
-.header i.material-icons {
+i.material-icons {
   font-family: 'Material Icons' !important;
   font-size: 20px !important;
   margin-top: -3px;
@@ -31,8 +31,8 @@
 div#content {
   overflow: hide;
   width: 100;
-  margin-top: 6rem;
-  margin-left: 15rem;
+  margin-top: 4rem;
+  margin-left: 14rem;
   padding: 0.2rem 1rem;
   transition: margin-left 0.5s ease;
 }

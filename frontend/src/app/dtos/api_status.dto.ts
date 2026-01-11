@@ -1,4 +1,4 @@
-import { User } from './user.dto';
+import { User } from "./user.dto";
 
 export interface ApiStatus {
   status: string;
