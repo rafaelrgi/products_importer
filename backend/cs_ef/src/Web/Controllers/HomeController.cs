@@ -9,11 +9,6 @@ namespace cs_ef.src.Web.Controllers
   [ApiController]
   public class HomeController : Controller
   {
-    public HomeController()
-    {
-
-    }
-
     [HttpGet]
     public ActionResult<string> Index()
     {
@@ -26,13 +21,17 @@ namespace cs_ef.src.Web.Controllers
         Status = "API is ready!",
         IsDocker = isDocker,
         IsAuth = isAuth,
+#if DEBUG
         BaseDir = AppContext.BaseDirectory,
+#endif
         User = !isAuth ? null : new
         {
+#if DEBUG
           Id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+          AuthType = User.Identity.AuthenticationType,
+#endif
           Name = User.Identity!.Name,
           Admin = User.IsInRole("Admin"),
-          AuthType = User.Identity.AuthenticationType,
         }
       };
 
