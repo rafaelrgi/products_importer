@@ -43,7 +43,7 @@ export class UserForm {
     });
 
     //non admins can only access their own profile
-    const myId = this.authService.getUser()?.id ?? -1;
+    const myId = Number(this.authService.getUser()?.id ?? -1);
     this.ownProfile = myId === this.id;
     if ((!this.authService.isAdmin()) && !this.ownProfile) {
       this.router.navigate([`/users/${myId}`]);
@@ -129,7 +129,10 @@ export class UserForm {
     this.usersService.save(user).subscribe({
       next: (response) => {
         alert('Record saved!');
-        this.router.navigate([`/users`]);
+        if (this.authService.isAdmin())
+          this.router.navigate(['/users/']);
+        else
+          this.router.navigate(['/']);
       },
       error: (err) => {
         this.error = err.message || err.error.message || 'Could not save the record. Please try again.';

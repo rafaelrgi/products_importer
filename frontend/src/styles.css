@@ -1,6 +1,5 @@
 .hidden {
   display: none;
-
 }
 
 table {
@@ -13,13 +12,22 @@ tr:nth-child(even) {
 
 table th,
 table td {
+  vertical-align: middle;
   text-align: left;
   white-space: nowrap;
+  padding: 4px;
 }
 
+table th.right,
+table td.right,
 table th.btn,
 table td.btn {
   text-align: right;
+}
+
+table th.center,
+table td.center {
+  text-align: center;
 }
 
 i.material-icons {
@@ -69,6 +77,8 @@ form .btn-group {
 .btn {
   cursor: pointer;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .btn.disabled {
@@ -97,57 +107,77 @@ form .btn-group {
   background-color: transparent;
 }
 
-.btn-primary {
+button.btn {
+  color: #000 !important;
+  background-color: #eee !important;
+  border: 2px solid #eee !important;
+}
+
+button.btn:hover {
+  background-color: #ddd !important;
+  border: 2px solid #ddd !important;
+}
+
+button.btn-flat {
+  background-color: transparent !important;
+  border: 2px solid transparent !important;
+}
+
+button.btn-flat:hover {
+  background-color: transparent !important;
+}
+
+button.btn-primary {
   color: #fff !important;
   background-color: #004ead !important;
   border: 2px solid #004ead !important;
 }
 
-.btn-primary:hover {
+button.btn-primary:hover {
   background-color: #012a5b !important;
   border-color: #012a5b !important;
 }
 
-.btn-danger {
+button.btn-danger {
   color: #fff !important;
   background-color: #b40600 !important;
   border: 2px solid #b40600 !important;
 }
 
-.btn-warning {
+button.btn-warning {
   color: #fff !important;
   background-color: #cf6f00 !important;
   border: 2px solid #cf6f00 !important;
 }
 
-.btn-success {
+button.btn-success {
   color: #fff !important;
   background-color: #00a000 !important;
   border: 2px solid #00a000 !important;
 }
 
-.btn-info {
+button.btn-info {
   color: #fff !important;
   background-color: #7801c7 !important;
   border: 2px solid #7801c7 !important;
 }
 
-.btn-danger:hover {
+button.btn-danger:hover {
   background-color: #8f0500 !important;
   border-color: #8f0500 !important;
 }
 
-.btn-warning:hover {
+button.btn-warning:hover {
   background-color: #b35f01 !important;
   border-color: #b35f01 !important;
 }
 
-.btn-success:hover {
+button.btn-success:hover {
   background-color: #367e36 !important;
   border-color: #367e36 !important;
 }
 
-.btn-info:hover {
+button.btn-info:hover {
   background-color: #580092 !important;
   border-color: #580092 !important;
 }

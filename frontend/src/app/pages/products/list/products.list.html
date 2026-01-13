@@ -1,0 +1,101 @@
+@if (this.status !== PageStatus.Loading && this.status !== PageStatus.None) {
+<div>
+  <h2>Products</h2>
+</div>
+}
+
+@if (this.status === PageStatus.Error) {
+<div class="txt-error">
+  {{ this.error }}
+</div>
+}
+
+@if (this.status === PageStatus.Empty) {
+<div class="txt-message">
+  No records found
+</div>
+<br>
+<button class="btn btn-success" (click)="add()">Add a new record</button>
+}
+
+@else if (this.status === PageStatus.Ready){
+<table>
+  <tr>
+    <!-- "id" or "name" or "quantity" or "price" or "expiration"  swap_vert arrow_downward arrow_upward -->
+    <th width="10%">
+      <button title="Sort by Code" class="btn btn-flat" (click)="sort('id')">
+        <b>Code</b>
+        <i class="material-icons">{{ getSortIcon('id') }}</i>
+      </button>
+    </th>
+    <th width="40%">
+      <button title="Sort by Code" class="btn btn-flat" (click)="sort('name')">
+        <b>Name</b>
+        <i class="material-icons">{{ getSortIcon('name') }}</i>
+      </button>
+    </th>
+    <th width="15%" class="right">
+      <button title="Sort by Code" class="btn btn-flat" (click)="sort('expiration')">
+        <b>Expiration</b>
+        <i class="material-icons">{{ getSortIcon('expiration') }}</i>
+      </button>
+    </th>
+    <th width="12%" class="right">
+      <button title="Sort by Code" class="btn btn-flat" (click)="sort('quantity')">
+        <b>Quantity</b>
+        <i class="material-icons">{{ getSortIcon('quantity') }}</i>
+      </button>
+    </th>
+    <th width="13%" class="right">
+      <button title="Sort by Code" class="btn btn-flat" (click)="sort('price')">
+        <b>Price</b>
+        <i class="material-icons">{{ getSortIcon('price') }}</i>
+      </button>
+    </th>
+    <th class="btn" width="10%">
+      <button title="Add new User" class="btn btn-success icon material-icons" (click)="add()">add</button>
+    </th>
+  </tr>
+  @for (row of this.rows; track row.id) {
+  <tr>
+    <td>{{ row.id }}</td>
+    <td>{{ row.name }} </td>
+    <td class="right">{{ formatDate(row.expiration) }}</td>
+    <!-- <td class="right">{{ row.expiration | date:'MM/dd/yyyy' }}</td> -->
+    <td class="right">{{ row.quantity }}</td>
+    <td class="right">{{ row.price }}</td>
+    <td class="btn">
+      &nbsp;
+      <button title="Details/Edit" class="btn btn-info icon material-icons" (click)="edit(row.id)">edit</button>
+      &nbsp;
+      <button title="Block/Delete" class="btn btn-danger icon material-icons" (click)="delete(row.id)">delete</button>
+    </td>
+  </tr>
+  } <!-- for (row of this.rows; track row.id) -->
+
+  <!-- Pagination -->
+  <tr>
+    <td colspan="99" class="center">
+      <br>
+      Page {{ pagination?.page }} of {{ pagination?.pageCount }} <br>
+      <button title="First page" class="btn icon material-icons {{canFirstPage()? '' : 'disabled'}}" (click)="firstPage()">
+        first_page
+      </button>
+      &nbsp;
+      <button title="Previous page" class="btn icon material-icons {{canPreviousPage()? '' : 'disabled'}}"
+        (click)="previousPage()"> keyboard_arrow_left
+      </button>
+      &nbsp;
+      <button title="Next page" class="btn icon material-icons {{canNextPage()? '' : 'disabled'}}" (click)="nextPage()">
+        keyboard_arrow_right
+      </button>
+      &nbsp;
+      <button title="Last page" class="btn icon material-icons {{canLastPage()? '' : 'disabled'}}" (click)="lastPage()">
+        last_page
+      </button>
+    </td>
+  </tr>
+
+</table>
+
+} <!-- if (this.rows) -->

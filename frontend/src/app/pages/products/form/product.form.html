@@ -1,3 +1,4 @@
+<!--
 @if (user) {
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <h2>{{ ownProfile? "My profile" : "User " + id }}</h2>
@@ -23,10 +24,10 @@
   <br>
 
   <label for="createdAt">Created at</label>
-  <input type="text" id="createdAt" value="{{user.createdAt | date:'MM/dd/yyyy h:mm a'}}" readonly>
+  <input type="text" id="createdAt" value="{{user.createdAt | date:'dd/MM/yyyy HH:mm'}}" readonly>
   <br>
   <label for="updatedAt">Updated at</label>
-  <input type="text" id="updatedAt" value="{{user.updatedAt | date:'MM/dd/yyyy h:mm a'}}" readonly>
+  <input type="text" id="updatedAt" value="{{user.updatedAt | date:'dd/MM/yyyy HH:mm'}}" readonly>
   <br>
 
   @if (ownProfile || isChangingPassword) {
@@ -72,3 +73,5 @@
 </form>
 
 }
+
+ -->

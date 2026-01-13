@@ -31,27 +31,27 @@
       <button title="Add new User" class="btn btn-success icon material-icons" (click)="add()">add</button>
     </th>
   </tr>
-  @for (user of this.users; track user.id) {
+  @for (row of this.rows; track row.id) {
   <tr>
-    <td>{{ user.id }}</td>
-    <td>{{ user.name }} </td>
-    <td>{{ user.email }}</td>
-    <td>{{ user.isAdmin? "Admin" : "User" }}</td>
-    <td>{{ user.isDeleted? "Blocked" : "Active" }}</td>
+    <td>{{ row.id }}</td>
+    <td>{{ row.name }} </td>
+    <td>{{ row.email }}</td>
+    <td>{{ row.isAdmin? "Admin" : "User" }}</td>
+    <td>{{ row.isDeleted? "Blocked" : "Active" }}</td>
     <td class="btn">
       &nbsp;
-      <button title="Details/Edit" class="btn btn-info icon material-icons" (click)="edit(user.id)">edit</button>
+      <button title="Details/Edit" class="btn btn-info icon material-icons" (click)="edit(row.id)">edit</button>
       &nbsp;
-      @if (user.isDeleted) {
+      @if (row.isDeleted) {
       <button title="Unblock/Restore" class="btn btn-warning icon material-icons"
-        (click)="undelete(user.id)">restore_from_trash</button>
+        (click)="undelete(row.id)">restore_from_trash</button>
       } @else {
-      <button title="Block/Delete" class="btn btn-danger icon material-icons" (click)="delete(user.id)">delete</button>
+      <button title="Block/Delete" class="btn btn-danger icon material-icons" (click)="delete(row.id)">delete</button>
       }
     </td>
   </tr>
-  } <!-- for (user of this.users; track user.id) -->
+  } <!-- for (row of this.row; track row.id) -->
 </table>
 
 
-} <!-- if (this.users) -->
+} <!-- if (this.row) -->

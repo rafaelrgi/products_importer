@@ -12,7 +12,8 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   getStatus(): Observable<ApiStatus> {
-    return this.http.get<ApiStatus>(environment.authUrl);
+    return this.http.get<ApiStatus>(environment.apiUrl);
+    //return this.http.get<ApiStatus>(environment.authUrl);
   }
 
 }

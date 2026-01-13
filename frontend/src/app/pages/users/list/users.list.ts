@@ -15,7 +15,7 @@ export class UsersList {
   public PageStatus = PageStatus;
   public status: PageStatus = PageStatus.None;
   public error: string = '';
-  public users: User[] | null = null;
+  public rows: User[] | null = null;
 
   constructor(private usersService: UsersService, private authService: AuthService,
     private cdRef: ChangeDetectorRef, private router: Router) { }
@@ -38,8 +38,8 @@ export class UsersList {
     this.usersService.fetchAll().subscribe({
       //success
       next: (response) => {
-        this.users = response.data;
-        this.status = (this.users?.length ?? 0) > 0 ? PageStatus.Ready : PageStatus.Empty;
+        this.rows = response.data;
+        this.status = (this.rows?.length ?? 0) > 0 ? PageStatus.Ready : PageStatus.Empty;
         this.cdRef.detectChanges();
       },
       //error
