@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, HostListener, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Menu } from './components/menu/menu';
 import { Loading } from './components/loading/loading';
@@ -28,6 +28,11 @@ export class App {
 
   toggleCollapse(): void {
     this.isMenuCollapsed.set(!this.isMenuCollapsed());
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(event: BeforeUnloadEvent) {
+    event.preventDefault();
   }
 
 }

@@ -17,7 +17,7 @@ namespace cs_ef.src.Infra.Repositories
       _logger = logger;
     }
 
-    public async Task<List<Product>> FindAll(string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
+    public async Task<List<Product>> FindAll(string sort, string order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
     {
       var qry = _db.Products.AsQueryable();
       qry = _ApplyFilters(name, priceMin, priceMax, expirationMin, expirationMax, qry);
@@ -31,7 +31,7 @@ namespace cs_ef.src.Infra.Repositories
       return rows;
     }
 
-    public async Task<Pagination<Product>> FindAllPaginated(int page, int perPage, string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
+    public async Task<Pagination<Product>> FindAllPaginated(int page, int perPage, string sort, string order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
     {
       var qry = _db.Products.AsQueryable();
       qry = _ApplyFilters(name, priceMin, priceMax, expirationMin, expirationMax, qry);
@@ -58,11 +58,9 @@ namespace cs_ef.src.Infra.Repositories
       return result;
     }
 
-    private static IQueryable<Product> _ApplyOrderBy(string? sort, string? order, IQueryable<Product> qry)
+    private static IQueryable<Product> _ApplyOrderBy(string sort, string order, IQueryable<Product> qry)
     {
-      if (sort == null || order == null || sort.Length < 4)
-        return qry.OrderBy(x => x.Id);
-
+      //if (sort == null || order == null || sort.Length < 4) return qry.OrderBy(x => x.Id);
       sort = sort[0].ToString().ToUpper() + sort.Substring(1).ToLower();
       if (order.Equals("desc", StringComparison.OrdinalIgnoreCase))
         qry = qry.OrderByDescending(x => EF.Property<object>(x, sort)).ThenBy(x => x.Id);

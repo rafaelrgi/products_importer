@@ -1,7 +1,6 @@
 ﻿using cs_ef.src.Domain.Contracts;
 using cs_ef.src.Domain.Core;
 using cs_ef.src.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
 
 namespace cs_ef.src.Application.Services
 {
@@ -22,13 +21,21 @@ namespace cs_ef.src.Application.Services
 
     public async Task<List<Product>> FindAll(string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
     {
+      (sort, order) = SortOrderParams(sort, order);
       return await _repository.FindAll(sort, order, name, priceMin, priceMax, expirationMin, expirationMax);
     }
 
     public async Task<Pagination<Product>> FindAllPaginated(int page, int perPage, string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
     {
+      //pagination
       page = Math.Max(page, 1);
       perPage = Math.Max(perPage, 2);
+
+      (sort, order) = SortOrderParams(sort, order);
+
+      if (!IsValidSort(sort))
+        throw new ArgumentException("Invalid sorting: " + sort);
+
       return await _repository.FindAllPaginated(page, perPage, sort, order, name, priceMin, priceMax, expirationMin, expirationMax);
     }
 
@@ -54,5 +61,27 @@ namespace cs_ef.src.Application.Services
     {
       return await _repository.Save(row);
     }
+
+    private bool IsValidSort(string? sort)
+    {
+      if (string.IsNullOrEmpty(sort))
+        return true;
+
+      return sort switch
+      {
+        "id" or "name" or "quantity" or "price" or "expiration" => true,
+        _ => false,
+      };
+    }
+
+    private (string sort, string order) SortOrderParams(string? sort, string? order)
+    {
+      var sortNonNull = (sort ?? "id").Trim().ToLower();
+      var orderNonNull = (order ?? "asc").Trim().ToLower();
+      if (orderNonNull != "desc")
+        orderNonNull = "asc";
+      return (sortNonNull, orderNonNull);
+    }
+
   }
 }

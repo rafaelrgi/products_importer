@@ -11,9 +11,17 @@ export class ProductsService {
 
   constructor(private http: HttpClient) { }
 
-  //http://localhost:5000/api/products?page=1&perPage=10&sort=name&order=asc&priceMin=1&expirationMin=2023-01-21
-  fetchAll(page: number, perPage: number, sort: string, order: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/products/?page=${page}&perPage=${perPage}&sort=${sort}&order=${order}`);
+  fetchAll(
+    page: number, perPage: number, sort: string, asc: boolean,
+    name: string = '', priceMin: string = '', priceMax: string = '',
+    expirationMin: string = '', expirationMax: string = ''
+  ): Observable<any> {
+    const order = asc ? 'asc' : 'desc';
+    const filters = (name ? `&name=${name}` : '') +
+      (priceMin ? `&priceMin=${priceMin}` : '') + (priceMax ? `&priceMax=${priceMax}` : '') +
+      (expirationMin ? `&expirationMin=${expirationMin}` : '') + (expirationMax ? `&expirationMax=${expirationMax}` : '');
+
+    return this.http.get<any>(`${environment.apiUrl}/products/?page=${page}&perPage=${perPage}&sort=${sort}&order=${order}${filters}`);
   }
 
   fetch(id: number): Observable<any> {

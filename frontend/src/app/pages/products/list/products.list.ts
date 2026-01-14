@@ -1,15 +1,16 @@
 import { ChangeDetectorRef, Component, Inject, LOCALE_ID } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from './../../../services/auth';
 import { ProductsService } from './../../../services/products';
 import { PageStatus } from './../../../enums/page-status';
 import { Product } from './../../../dtos/product.dto';
 import { Pagination } from './../../../dtos/pagination.dto';
-import { DatePipe, formatDate } from '@angular/common';
+import { formatDate } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-products-list',
-  imports: [DatePipe],
+  imports: [FormsModule],
   templateUrl: './products.list.html',
   styleUrl: './products.list.css',
 })
@@ -23,9 +24,16 @@ export class ProductsList {
   _asc: boolean = true;
   _page: number = 1;
   _perPage: number = 15;
+  _filtering: boolean = false;
+  _name: string = '';
+  _expMin: string = '';
+  _expMax: string = '';
+  _priceMin: string = '';
+  _priceMax: string = '';
 
   constructor(private productsService: ProductsService, private authService: AuthService,
-    private cdRef: ChangeDetectorRef, private router: Router, @Inject(LOCALE_ID) private locale: string) { }
+    private cdRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute,
+    @Inject(LOCALE_ID) private locale: string) { }
 
   ngOnInit(): void {
     this.fetch();
@@ -33,7 +41,7 @@ export class ProductsList {
 
   fetch(): void {
     this.status = PageStatus.Loading;
-    this.productsService.fetchAll(this._page, this._perPage, this._sort, (this._asc ? 'asc' : 'desc')).subscribe({
+    this.productsService.fetchAll(this._page, this._perPage, this._sort, this._asc, this._name, this._priceMin, this._priceMax, this._expMin, this._expMax).subscribe({
       //success
       next: (response) => {
         this.pagination = new Pagination(response);
@@ -55,21 +63,15 @@ export class ProductsList {
     return (s == '01/01/0001') ? ' -- ' : s;
   }
 
-  canFirstPage(): boolean {
+  canPreviousPage(): boolean {
     return this._page > 1;
   }
-  canPreviousPage(): boolean {
-    return this.canFirstPage();
-  }
   canNextPage(): boolean {
-    return this.canLastPage();
-  }
-  canLastPage(): boolean {
-    return this._page < (this.pagination?.pageCount ?? 0) - 1;
+    return this._page < (this.pagination?.pageCount ?? 0);
   }
 
   firstPage(): void {
-    if (!this.canFirstPage()) return;
+    if (!this.canPreviousPage()) return;
     this._page = 1;
     this.fetch();
   }
@@ -84,7 +86,7 @@ export class ProductsList {
     this.fetch();
   }
   lastPage(): void {
-    if (!this.canLastPage()) return;
+    if (!this.canNextPage()) return;
     this._page = (this.pagination?.pageCount!);
     this.fetch();
   }
@@ -105,6 +107,29 @@ export class ProductsList {
       this._sort = column;
       this._asc = true;
     }
+
+    this._page = 1;
+    this.fetch();
+  }
+
+  showHideFilters(): void {
+    this._filtering = !this._filtering;
+    if (!this._filtering)
+      this.clearFilters();
+  }
+
+  clearFilters(): void {
+    this._name = '';
+    this._expMin = '';
+    this._expMax = '';
+    this._priceMin = '';
+    this._priceMax = '';
+    this._page = 1;
+    this.fetch();
+  }
+
+  filter(): void {
+    this._page = 1;
     this.fetch();
   }
 
@@ -126,7 +151,7 @@ export class ProductsList {
       //success
       next: (response) => {
         this.status = PageStatus.Ready;
-        this.fetch();
+        //TODO: this.fetch();
         this.cdRef.detectChanges();
       },
       //error
@@ -144,7 +169,7 @@ export class ProductsList {
       //success
       next: (response) => {
         this.status = PageStatus.Ready;
-        this.fetch();
+        //TODO: this.fetch();
       },
       //error
       error: (error) => {

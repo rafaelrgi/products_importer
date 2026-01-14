@@ -4,7 +4,6 @@ using cs_ef.src.Domain.Entities;
 using cs_ef.src.Reports;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mysqlx.Crud;
 using QuestPDF.Fluent;
 using System.Globalization;
 
@@ -33,19 +32,9 @@ namespace cs_ef.src.Web.Controllers
     public async Task<ActionResult<Pagination<Product>>> Index()
     {
       var parameters = GetListQueryParams();
-
-      //pagination
-      int page = Math.Max((parameters.Page ?? 1), 1);
-      int perPage = Math.Min(parameters.PerPage ?? 10, 50);
-
-      //sort & order
-      string sort = (parameters.Sort ?? "id").ToLower();
-      string order = (parameters.Order ?? "asc").ToLower();
-      if (order != "desc")
-        order = "asc";
-
-      var result = await _service.FindAllPaginated(page, perPage, sort, order, parameters.Name, parameters.PriceMin,
-                                                    parameters.PriceMax, parameters.ExpirationMin, parameters.ExpirationMax);
+      var result = await _service.FindAllPaginated(parameters.Page ?? 1, parameters.PerPage ?? 15, parameters.Sort, parameters.Order,
+                                                   parameters.Name, parameters.PriceMin, parameters.PriceMax,
+                                                   parameters.ExpirationMin, parameters.ExpirationMax);
       if (!result.HasData)
         return NotFound();
 

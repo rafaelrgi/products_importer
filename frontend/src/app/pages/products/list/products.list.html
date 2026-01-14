@@ -21,8 +21,7 @@
 @else if (this.status === PageStatus.Ready){
 <table>
   <tr>
-    <!-- "id" or "name" or "quantity" or "price" or "expiration"  swap_vert arrow_downward arrow_upward -->
-    <th width="10%">
+    <th width="8%">
       <button title="Sort by Code" class="btn btn-flat" (click)="sort('id')">
         <b>Code</b>
         <i class="material-icons">{{ getSortIcon('id') }}</i>
@@ -34,37 +33,57 @@
         <i class="material-icons">{{ getSortIcon('name') }}</i>
       </button>
     </th>
-    <th width="15%" class="right">
+    <th width="20%" class="right">
       <button title="Sort by Code" class="btn btn-flat" (click)="sort('expiration')">
         <b>Expiration</b>
         <i class="material-icons">{{ getSortIcon('expiration') }}</i>
       </button>
     </th>
-    <th width="12%" class="right">
+    <th width="8%" class="right">
       <button title="Sort by Code" class="btn btn-flat" (click)="sort('quantity')">
         <b>Quantity</b>
         <i class="material-icons">{{ getSortIcon('quantity') }}</i>
       </button>
     </th>
-    <th width="13%" class="right">
+    <th width="14%" class="right">
       <button title="Sort by Code" class="btn btn-flat" (click)="sort('price')">
         <b>Price</b>
         <i class="material-icons">{{ getSortIcon('price') }}</i>
       </button>
     </th>
-    <th class="btn" width="10%">
+    <th class="right" width="10%">
+      <button title="Filters" class="btn icon material-icons" (click)="showHideFilters()">manage_search</button> &nbsp;
       <button title="Add new User" class="btn btn-success icon material-icons" (click)="add()">add</button>
     </th>
   </tr>
+
+  <tr [class.hidden]="!_filtering"></tr> <!-- empty tr just to keep the rows color right -->
+  <tr [class.hidden]="!_filtering">
+    <td>&nbsp;</td>
+    <td><input type="text" placeholder="Name (starts with)" size="40" (keyup.enter)="filter()" [(ngModel)]="_name"></td>
+    <td class="center">
+      <input type="date" placeholder="Expiration" size="12" (keyup.enter)="filter()" [(ngModel)]="_expMin"> -
+      <input type="date" placeholder="mm/dd/yyyy" size="12" (keyup.enter)="filter()" [(ngModel)]="_expMax">
+    </td>
+    <td class="center">&nbsp;</td>
+    <td class="center">
+      <input type="number" placeholder="Price" size="8" (keyup.enter)="filter()" [(ngModel)]="_priceMin"> -
+      <input type="number" placeholder="Price" size="8" (keyup.enter)="filter()" [(ngModel)]="_priceMax">
+    </td>
+    <td class="right">
+      <button title="Apply filters" class="btn icon btn-primary material-icons" (click)="filter()">search
+      </button>
+    </td>
+  </tr>
+
   @for (row of this.rows; track row.id) {
   <tr>
     <td>{{ row.id }}</td>
     <td>{{ row.name }} </td>
     <td class="right">{{ formatDate(row.expiration) }}</td>
-    <!-- <td class="right">{{ row.expiration | date:'MM/dd/yyyy' }}</td> -->
     <td class="right">{{ row.quantity }}</td>
     <td class="right">{{ row.price }}</td>
-    <td class="btn">
+    <td class="right">
       &nbsp;
       <button title="Details/Edit" class="btn btn-info icon material-icons" (click)="edit(row.id)">edit</button>
       &nbsp;
@@ -78,7 +97,7 @@
     <td colspan="99" class="center">
       <br>
       Page {{ pagination?.page }} of {{ pagination?.pageCount }} <br>
-      <button title="First page" class="btn icon material-icons {{canFirstPage()? '' : 'disabled'}}" (click)="firstPage()">
+      <button title="First page" class="btn icon material-icons {{canPreviousPage()? '' : 'disabled'}}" (click)="firstPage()">
         first_page
       </button>
       &nbsp;
@@ -90,7 +109,7 @@
         keyboard_arrow_right
       </button>
       &nbsp;
-      <button title="Last page" class="btn icon material-icons {{canLastPage()? '' : 'disabled'}}" (click)="lastPage()">
+      <button title="Last page" class="btn icon material-icons {{canNextPage()? '' : 'disabled'}}" (click)="lastPage()">
         last_page
       </button>
     </td>

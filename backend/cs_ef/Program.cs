@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Cryptography;
 using QuestPDF.Infrastructure;
+using System.Security.Cryptography;
 
 QuestPDF.Settings.License = LicenseType.Community;
 
@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<Db>(options =>
 {
-  options.UseMySQL(builder.Configuration.GetConnectionString(Db.ConnectionName)!);
+    options.UseMySQL(builder.Configuration.GetConnectionString(Db.ConnectionName)!);
 });
 
 using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
@@ -38,44 +38,45 @@ rsa.ImportFromPem(publicKey.ToCharArray());
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
-  //bearer.SaveToken = true;
-  options.RequireHttpsMetadata = false;
-  options.Authority = JwtBearerDefaults.AuthenticationScheme;
-  options.Audience = JwtBearerDefaults.AuthenticationScheme;
-  options.TokenValidationParameters = new TokenValidationParameters
-  {
-    ValidateIssuerSigningKey = true,
-    IssuerSigningKey = new RsaSecurityKey(rsa),
-    ValidateIssuer = false,
-    ValidateAudience = false,
-    ValidateLifetime = true,
-  };
+    //bearer.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.Authority = JwtBearerDefaults.AuthenticationScheme;
+    options.Audience = JwtBearerDefaults.AuthenticationScheme;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new RsaSecurityKey(rsa),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+    };
 });
 
 //Require authorization by default for all requests
 builder.Services.AddAuthorization(options =>
 {
-  options.FallbackPolicy = new AuthorizationPolicyBuilder()
-      .RequireAuthenticatedUser()
-      .Build();
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
 });
 
 //Cors configuration
 builder.Services.AddCors(options =>
 {
-  options.AddPolicy("AllowAngularApp",
-      builder =>
-      {
-        builder.WithOrigins("http://localhost:4200")
-                 .AllowAnyHeader()
-                 .AllowAnyMethod();
-      });
+    options.AddPolicy("AllowAngularApp",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
 });
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 app.MapControllers();
-app.UseCors("AllowAngularApp");
 app.Run();
