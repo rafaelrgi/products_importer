@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, Inject, LOCALE_ID } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from './../../../services/auth';
 import { ProductsService } from './../../../services/products';
 import { PageStatus } from './../../../enums/page-status';
 import { Product } from './../../../dtos/product.dto';
 import { Pagination } from './../../../dtos/pagination.dto';
-import { formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -15,13 +15,13 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './products.list.css',
 })
 export class ProductsList {
-  public PageStatus = PageStatus;
-  public status: PageStatus = PageStatus.None;
-  public error: string = '';
-  public pagination: Pagination | null = null;
-  public rows: Product[] | null = null;
+  PageStatus = PageStatus;
+  status: PageStatus = PageStatus.None;
+  _error: string = '';
+  _rows: Product[] | null = null;
   _sort: string = 'name';
   _asc: boolean = true;
+  _pagination: Pagination | null = null;
   _page: number = 1;
   _perPage: number = 15;
   _filtering: boolean = false;
@@ -30,6 +30,7 @@ export class ProductsList {
   _expMax: string = '';
   _priceMin: string = '';
   _priceMax: string = '';
+  _showDeleted: boolean = false;
 
   constructor(private productsService: ProductsService, private authService: AuthService,
     private cdRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute,
@@ -41,18 +42,21 @@ export class ProductsList {
 
   fetch(): void {
     this.status = PageStatus.Loading;
-    this.productsService.fetchAll(this._page, this._perPage, this._sort, this._asc, this._name, this._priceMin, this._priceMax, this._expMin, this._expMax).subscribe({
+    this.productsService.fetchAll(
+      this._page, this._perPage, this._sort, this._asc,
+      this._name, this._priceMin, this._priceMax, this._expMin, this._expMax, this._showDeleted
+    ).subscribe({
       //success
       next: (response) => {
-        this.pagination = new Pagination(response);
-        this.rows = response.data;
-        this.status = (this.pagination?.hasData ?? false) ? PageStatus.Ready : PageStatus.Empty;
+        this._pagination = new Pagination(response);
+        this._rows = response.data;
+        this.status = (this._pagination?.hasData ?? false) ? PageStatus.Ready : PageStatus.Empty;
         this.cdRef.detectChanges();
       },
       //error
       error: (error) => {
         this.status = PageStatus.Error;
-        this.error = 'Error calling server: ' + (error.message || error.toString());
+        this._error = 'Error calling server: ' + (error.message || error.toString());
         this.cdRef.detectChanges();
       }
     });
@@ -67,7 +71,7 @@ export class ProductsList {
     return this._page > 1;
   }
   canNextPage(): boolean {
-    return this._page < (this.pagination?.pageCount ?? 0);
+    return this._page < (this._pagination?.pageCount ?? 0);
   }
 
   firstPage(): void {
@@ -87,7 +91,7 @@ export class ProductsList {
   }
   lastPage(): void {
     if (!this.canNextPage()) return;
-    this._page = (this.pagination?.pageCount!);
+    this._page = (this._pagination?.pageCount!);
     this.fetch();
   }
 
@@ -118,6 +122,12 @@ export class ProductsList {
       this.clearFilters();
   }
 
+  showHideDeleted(): void {
+    this._showDeleted = !this._showDeleted;
+    this._page = 1;
+    this.fetch();
+  }
+
   clearFilters(): void {
     this._name = '';
     this._expMin = '';
@@ -134,10 +144,12 @@ export class ProductsList {
   }
 
   add(): void {
+    //TODO:
     this.router.navigate(['/products/0']);
   }
 
   edit(id: number): void {
+    //TODO:
     if (id <= 0)
       return;
     this.router.navigate([`/products/${id}`]);
@@ -151,13 +163,13 @@ export class ProductsList {
       //success
       next: (response) => {
         this.status = PageStatus.Ready;
-        //TODO: this.fetch();
+        this.fetch();
         this.cdRef.detectChanges();
       },
       //error
       error: (error) => {
         this.status = PageStatus.Error;
-        this.error = 'Error calling server: ' + (error.message || error.toString());
+        this._error = 'Error calling server: ' + (error.message || error.toString());
         this.cdRef.detectChanges();
       }
     });
@@ -169,12 +181,12 @@ export class ProductsList {
       //success
       next: (response) => {
         this.status = PageStatus.Ready;
-        //TODO: this.fetch();
+        this.fetch();
       },
       //error
       error: (error) => {
         this.status = PageStatus.Error;
-        this.error = 'Error calling server: ' + (error.message || error.toString());
+        this._error = 'Error calling server: ' + (error.message || error.toString());
         this.cdRef.detectChanges();
       }
     });

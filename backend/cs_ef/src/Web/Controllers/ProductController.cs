@@ -19,7 +19,7 @@ namespace cs_ef.src.Web.Controllers
     readonly IProductImporterService _importer;
     readonly ILogger<ProductController> _logger;
 
-    private record ListQueryParams(int? Page, int? PerPage, string? Sort, string? Order, string? Name, decimal? PriceMin, decimal? PriceMax, DateTime? ExpirationMin, DateTime? ExpirationMax);
+    private record ListQueryParams(int? Page, int? PerPage, string? Sort, string? Order, string? Name, decimal? PriceMin, decimal? PriceMax, DateTime? ExpirationMin, DateTime? ExpirationMax, bool ShowDeleted = false);
 
     public ProductController(IProductService service, IProductImporterService importer, ILogger<ProductController> logger)
     {
@@ -34,7 +34,7 @@ namespace cs_ef.src.Web.Controllers
       var parameters = GetListQueryParams();
       var result = await _service.FindAllPaginated(parameters.Page ?? 1, parameters.PerPage ?? 15, parameters.Sort, parameters.Order,
                                                    parameters.Name, parameters.PriceMin, parameters.PriceMax,
-                                                   parameters.ExpirationMin, parameters.ExpirationMax);
+                                                   parameters.ExpirationMin, parameters.ExpirationMax, parameters.ShowDeleted);
       if (!result.HasData)
         return NotFound();
 
@@ -180,6 +180,8 @@ namespace cs_ef.src.Web.Controllers
       DateTime? expirationMin = DateTime.TryParse(HttpContext.Request.Query["expirationMin"], out dt) ? dt : null;
       DateTime? expirationMax = DateTime.TryParse(HttpContext.Request.Query["expirationMax"], out dt) ? dt : null;
 
+      bool showDeleted = (HttpContext.Request.Query["showDeleted"] == "1");
+
       return new ListQueryParams(
         Page: page,
         PerPage: perPage,
@@ -189,7 +191,8 @@ namespace cs_ef.src.Web.Controllers
         PriceMin: priceMin,
         PriceMax: priceMax,
         ExpirationMin: expirationMin,
-        ExpirationMax: expirationMax
+        ExpirationMax: expirationMax,
+        ShowDeleted: showDeleted
       );
     }
 

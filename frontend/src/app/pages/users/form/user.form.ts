@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, Input, isDevMode } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
 import { UsersService } from './../../../services/users';
 import { AuthService } from './../../../services/auth';
 import { FormService } from './../../../services/form';
@@ -9,20 +9,19 @@ import { User } from './../../../dtos/user.dto';
 
 @Component({
   selector: 'app-user-form',
-  imports: [DatePipe, ReactiveFormsModule],
+  imports: [DatePipe, FormsModule],
   templateUrl: './user.form.html',
   styleUrl: './user.form.css',
 })
 export class UserForm {
-  form!: FormGroup;
-  public ownProfile: boolean = false;
-  public user: User | null = null;
-  public isChangingPassword: boolean = false;
-  public error: string = '';
-  public nameError: string = '';
-  public emailError: string = '';
-  public passwordOldError: string = '';
-  public passwordNewError: string = '';
+  _ownProfile: boolean = false;
+  _user: User = {} as User;
+  _isChangingPassword: boolean = false;
+  _error: string = '';
+  _nameError: string = '';
+  _emailError: string = '';
+  _passwordOldError: string = '';
+  _passwordNewError: string = '';
   @Input() id: number = 0;
 
   constructor(private fb: FormBuilder, private usersService: UsersService, private authService: AuthService,
@@ -30,28 +29,15 @@ export class UserForm {
 
   ngOnInit(): void {
     this.id = Number(this.id);
-    const emailValidator = isDevMode() ? Validators.minLength(2) : Validators.email;
-    this.form = this.fb.group({
-      id: [this.id],
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, emailValidator]],
-      isAdmin: ['', []],
-      isDeleted: ['', []],
-      password: ['', []],
-      passwordNew: ['', []],
-      passwordCheck: ['', []],
-    });
-
     //non admins can only access their own profile
     const myId = Number(this.authService.getUser()?.id ?? -1);
-    this.ownProfile = myId === this.id;
-    if ((!this.authService.isAdmin()) && !this.ownProfile) {
+    this._ownProfile = myId === this.id;
+    if ((!this.authService.isAdmin()) && !this._ownProfile) {
       this.router.navigate([`/users/${myId}`]);
       return;
     }
 
-    this.isChangingPassword = (this.id === 0);
-
+    this._isChangingPassword = (this.id === 0);
     this.fetch();
   }
 
@@ -60,73 +46,57 @@ export class UserForm {
   }
 
   fetch(): void {
-    //this.status = PageStatus.Loading;
-
     //adding a new user?
     if (this.id === 0) {
-      this.user = <User>{ id: 0 };
+      this._user = { id: 0 } as User;
       return;
     }
     //load user from server
     this.usersService.fetch(this.id).subscribe({
       //success
       next: (response) => {
-        this.user = response;
-        this.form.patchValue({
-          name: this.user?.name,
-          email: this.user?.email
-        });
-        //this.status = (this.users?.length ?? 0) > 0 ? PageStatus.Ready : PageStatus.Empty;
+        this._user = response;
         this.cdRef.detectChanges();
       },
       //error
       error: (error) => {
-        //this.status = PageStatus.Error;
-        this.error = 'Error calling server: ' + (error.message || error.toString());
+        this._error = 'Error calling server: ' + (error.message || error.toString());
         this.cdRef.detectChanges();
       }
     });
   }
 
   setIsAdmin(): void {
-    if (!this.user || !this.isAdmin())
+    if (!this._user || !this.isAdmin())
       return;
-    this.user!.isAdmin = !this.user?.isAdmin;
+    this._user!.isAdmin = !this._user?.isAdmin;
   }
 
   setIsDeleted(): void {
-    if (!this.user || !this.isAdmin())
+    if (!this._user || !this.isAdmin())
       return;
-    this.user!.isDeleted = !this.user?.isDeleted;
+    this._user!.isDeleted = !this._user?.isDeleted;
   }
 
   setChangePassword(): void {
-    if (!this.user || !this.ownProfile)
+    if (!this._user || !this._ownProfile)
       return;
-    this.isChangingPassword = !this.isChangingPassword;
-
-    /*
-    this.formService.onOffValidation('password', this.form, this.isChangingPassword);
-    this.formService.onOffValidation('passwordNew', this.form, this.isChangingPassword);
-    this.formService.onOffValidation('passwordCheck', this.form, this.isChangingPassword);
-    */
+    this._isChangingPassword = !this._isChangingPassword;
   }
 
 
   onSubmit(): void {
     if (!this.validateForm())
       return;
-
-    const user: User = this.form.value as User;
-    user.isAdmin = this.user?.isAdmin ?? false;
-    user.isDeleted = this.user?.isDeleted ?? false;
-    if (!this.isChangingPassword) {
-      user.password = user.passwordNew = user.passwordCheck = '';
+    this._user.isAdmin = this._user?.isAdmin ?? false;
+    this._user.isDeleted = this._user?.isDeleted ?? false;
+    if (!this._isChangingPassword) {
+      this._user.password = this._user.passwordNew = this._user.passwordCheck = '';
     }
 
     //console.log(user);
-    this.error = '';
-    this.usersService.save(user).subscribe({
+    this._error = '';
+    this.usersService.save(this._user).subscribe({
       next: (response) => {
         alert('Record saved!');
         if (this.authService.isAdmin())
@@ -135,7 +105,7 @@ export class UserForm {
           this.router.navigate(['/']);
       },
       error: (err) => {
-        this.error = err.message || err.error.message || 'Could not save the record. Please try again.';
+        this._error = err.message || err.error.message || 'Could not save the record. Please try again.';
         this.cdRef.detectChanges();
       }
     });
@@ -143,35 +113,31 @@ export class UserForm {
   }
 
   private validateForm(): boolean {
-    //this.formError = '';
-    this.nameError = '';
-    this.emailError = '';
-    this.passwordOldError = '';
-    this.passwordNewError = '';
+    this._error = '';
+    this._nameError = '';
+    this._emailError = '';
+    this._passwordOldError = '';
+    this._passwordNewError = '';
 
-    let passwordsOk = true;
-    if (this.isChangingPassword) {
-      passwordsOk = false;
-      if (this.ownProfile && this.form.get('password')?.value.length < 3)
-        this.passwordOldError = 'Please enter the current password';
-      else if (this.form.get('passwordNew')?.value.length < 3)
-        this.passwordNewError = 'Please enter the new password';
-      else if (this.form.get('passwordNew')?.value !== this.form.get('passwordCheck')?.value)
-        this.passwordNewError = 'The passwords do not match';
-      else passwordsOk = true;
+    this._user.name = this._user.name.trim();
+    if (this._user.name.length < 2)
+      this._nameError = 'Please enter a valid name';
+
+    this._user.email = this._user.email.trim();
+    if (! /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this._user.email))
+      this._emailError = 'Please enter a valid email';
+
+    if (this._isChangingPassword) {
+      if (this._ownProfile && (this._user.password ?? '').length < 3)
+        this._passwordOldError = 'Please enter the current password';
+      else if ((this._user.passwordNew ?? '').length < 3)
+        this._passwordNewError = 'Please enter the new password';
+      else if (this._user.passwordNew !== this._user.passwordCheck)
+        this._passwordNewError = 'The passwords do not match';
     }
 
-    if (this.form.valid && passwordsOk)
-      return true;
-
-    if (this.form.get('name')?.invalid) this.nameError = 'Please enter a valid name';
-
-    if (this.form.get('email')?.invalid) this.emailError = 'Please enter a valid email';
-
-    if (this.form.get('password')?.invalid) this.passwordOldError = 'Please enter your current password';
-    if (this.form.get('passwordNew')?.invalid) this.passwordNewError = 'Please enter your passwordNewError ';
-    if (this.form.get('passwordCheck')?.invalid) this.passwordNewError = 'Please enter your passwordNewError';
-
-    return false;
+    if (this._error || this._nameError || this._emailError || this._passwordOldError || this._passwordNewError)
+      return false;
+    return true;
   }
 }

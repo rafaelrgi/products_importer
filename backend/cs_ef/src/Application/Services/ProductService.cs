@@ -19,13 +19,18 @@ namespace cs_ef.src.Application.Services
       return row;
     }
 
-    public async Task<List<Product>> FindAll(string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
+    public async Task<List<Product>> FindAll(
+        string? sort, string? order,
+        string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
     {
       (sort, order) = SortOrderParams(sort, order);
       return await _repository.FindAll(sort, order, name, priceMin, priceMax, expirationMin, expirationMax);
     }
 
-    public async Task<Pagination<Product>> FindAllPaginated(int page, int perPage, string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
+    public async Task<Pagination<Product>> FindAllPaginated(
+        int page, int perPage, string? sort, string? order,
+        string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax, bool showDeleted
+    )
     {
       //pagination
       page = Math.Max(page, 1);
@@ -36,7 +41,7 @@ namespace cs_ef.src.Application.Services
       if (!IsValidSort(sort))
         throw new ArgumentException("Invalid sorting: " + sort);
 
-      return await _repository.FindAllPaginated(page, perPage, sort, order, name, priceMin, priceMax, expirationMin, expirationMax);
+      return await _repository.FindAllPaginated(page, perPage, sort, order, name, priceMin, priceMax, expirationMin, expirationMax, showDeleted);
     }
 
     public async Task<bool> Delete(int id)

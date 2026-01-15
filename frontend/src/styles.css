@@ -2,6 +2,14 @@
   display: none;
 }
 
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
 table {
   border-collapse: collapse;
 }
@@ -15,7 +23,7 @@ table td {
   vertical-align: middle;
   text-align: left;
   white-space: nowrap;
-  padding: 4px;
+  padding: 4px 6px;
 }
 
 table th.right,
@@ -79,7 +87,8 @@ form .btn-group {
   text-align: center;
 }
 
-td input {
+td input,
+td button {
   font-size: 0.8em;
 }
 
@@ -93,6 +102,7 @@ td input[type="number"] {
   border-radius: 4px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
 }
 
 .btn.disabled {
@@ -103,21 +113,25 @@ td input[type="number"] {
 
 .btn {
   min-width: 8em;
+  min-height: 3em;
   padding: 6px 16px;
   border: 0;
 }
 
 .btn.icon {
   min-width: 0;
+  min-height: 0;
   width: 1.5em;
   padding: 2px;
 }
 
 .btn.flat {
   min-width: 0;
+  min-height: 0;
   padding: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
   background-color: transparent;
 }
 
@@ -132,13 +146,20 @@ button.btn:hover {
   border: 2px solid #ddd !important;
 }
 
+button.btn.flat,
 button.btn-flat {
   background-color: transparent !important;
   border: 2px solid transparent !important;
 }
 
+button.btn.flat:hover,
 button.btn-flat:hover {
   background-color: transparent !important;
+}
+
+button.btn.mini {
+  min-width: 0;
+  padding: 6px 0;
 }
 
 button.btn-primary {

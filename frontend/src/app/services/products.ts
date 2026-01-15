@@ -14,14 +14,18 @@ export class ProductsService {
   fetchAll(
     page: number, perPage: number, sort: string, asc: boolean,
     name: string = '', priceMin: string = '', priceMax: string = '',
-    expirationMin: string = '', expirationMax: string = ''
+    expirationMin: string = '', expirationMax: string = '',
+    showDeleted: boolean
   ): Observable<any> {
+    const deleted = showDeleted ? '1' : '0'
     const order = asc ? 'asc' : 'desc';
     const filters = (name ? `&name=${name}` : '') +
       (priceMin ? `&priceMin=${priceMin}` : '') + (priceMax ? `&priceMax=${priceMax}` : '') +
       (expirationMin ? `&expirationMin=${expirationMin}` : '') + (expirationMax ? `&expirationMax=${expirationMax}` : '');
 
-    return this.http.get<any>(`${environment.apiUrl}/products/?page=${page}&perPage=${perPage}&sort=${sort}&order=${order}${filters}`);
+    return this.http.get<any>(
+      `${environment.apiUrl}/products/?page=${page}&perPage=${perPage}&sort=${sort}&order=${order}${filters}&showDeleted=${deleted}`
+    );
   }
 
   fetch(id: number): Observable<any> {

@@ -7,7 +7,7 @@ namespace cs_ef.src.Domain.Contracts
   {
     Task<Product?> Find(int id);
     Task<List<Product>> FindAll(string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax);
-    Task<Pagination<Product>> FindAllPaginated(int page, int perPage, string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax);
+    Task<Pagination<Product>> FindAllPaginated(int page, int perPage, string? sort, string? order, string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax, bool showDeleted);
     Task<bool> Save(Product row);
     Task<bool> Delete(int id);
     Task<bool> UnDelete(int id);

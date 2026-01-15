@@ -4,6 +4,7 @@ import { User } from './../../../dtos/user.dto';
 import { AuthService } from './../../../services/auth';
 import { Router } from '@angular/router';
 import { PageStatus } from './../../../enums/page-status';
+import { Pagination } from './../../../dtos/pagination.dto';
 
 @Component({
   selector: 'app-users-list',
@@ -12,10 +13,14 @@ import { PageStatus } from './../../../enums/page-status';
   styleUrl: './users.list.css',
 })
 export class UsersList {
-  public PageStatus = PageStatus;
-  public status: PageStatus = PageStatus.None;
-  public error: string = '';
-  public rows: User[] | null = null;
+  PageStatus = PageStatus;
+  status: PageStatus = PageStatus.None;
+  error: string = '';
+  rows: User[] | null = null;
+  _pagination: Pagination | null = null;
+  _page: number = 1;
+  _perPage: number = 15;
+
 
   constructor(private usersService: UsersService, private authService: AuthService,
     private cdRef: ChangeDetectorRef, private router: Router) { }
@@ -35,9 +40,10 @@ export class UsersList {
 
   fetch(): void {
     this.status = PageStatus.Loading;
-    this.usersService.fetchAll().subscribe({
+    this.usersService.fetchAll(this._page, this._perPage).subscribe({
       //success
       next: (response) => {
+        this._pagination = new Pagination(response);
         this.rows = response.data;
         this.status = (this.rows?.length ?? 0) > 0 ? PageStatus.Ready : PageStatus.Empty;
         this.cdRef.detectChanges();
@@ -49,6 +55,34 @@ export class UsersList {
         this.cdRef.detectChanges();
       }
     });
+  }
+
+  canPreviousPage(): boolean {
+    return this._page > 1;
+  }
+  canNextPage(): boolean {
+    return this._page < (this._pagination?.pageCount ?? 0);
+  }
+
+  firstPage(): void {
+    if (!this.canPreviousPage()) return;
+    this._page = 1;
+    this.fetch();
+  }
+  previousPage(): void {
+    if (!this.canPreviousPage()) return;
+    this._page--;
+    this.fetch();
+  }
+  nextPage(): void {
+    if (!this.canNextPage()) return;
+    this._page++;
+    this.fetch();
+  }
+  lastPage(): void {
+    if (!this.canNextPage()) return;
+    this._page = (this._pagination?.pageCount!);
+    this.fetch();
   }
 
   add(): void {

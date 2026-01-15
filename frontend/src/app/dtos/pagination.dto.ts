@@ -13,13 +13,3 @@ export class Pagination {
   public perPage: number = 0;
   public recordCount: number = 0;
 }
-/*
-
-export interface Pagination {
-  hasData: boolean;
-  page: number;
-  pageCount: number;
-  perPage: number;
-  recordCount: number;
-}
-*/

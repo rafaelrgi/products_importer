@@ -11,8 +11,8 @@ export class UsersService {
 
   constructor(private http: HttpClient) { }
 
-  fetchAll(): Observable<any> {
-    return this.http.get<any>(`${environment.authUrl}/users/?page=1&perPage=-1`);
+  fetchAll(page: number, perPage: number): Observable<any> {
+    return this.http.get<any>(`${environment.authUrl}/users/?page=${page}&perPage=${perPage}`);
   }
 
   fetch(id: number): Observable<any> {

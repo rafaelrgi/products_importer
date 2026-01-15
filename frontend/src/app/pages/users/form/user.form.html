@@ -1,41 +1,41 @@
-@if (user) {
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <h2>{{ ownProfile? "My profile" : "User " + id }}</h2>
-  <span class="txt-error form-error">{{ error }} &nbsp;</span><br>
+@if (_user) {
+<form (ngSubmit)="onSubmit()">
+  <h2>{{ _ownProfile? "My profile" : "User " + id }}</h2>
+  <span class="txt-error form-error">{{ _error }} &nbsp;</span><br>
 
   <label for="name">Name*</label>
-  <input type="text" id="name" value="{{user.name}}" formControlName="name" required autofocus>
-  <span class="txt-error">{{ nameError }}</span><br>
+  <input type="text" id="name" name="name" [(ngModel)]="_user.name" required autofocus>
+  <span class="txt-error">{{ _nameError }}</span><br>
   <label for="email">Email*</label>
-  <input type="email" id="email" value={{user.email}} formControlName="email" required>
-  <span class="txt-error">{{ emailError }}</span><br>
+  <input type="email" id="email" name="email" [(ngModel)]="_user.email" required>
+  <span class="txt-error">{{ _emailError }}</span><br>
   <button type="button" title="Activate/Deactivate the user" class="btn flat {{isAdmin()? '' : 'disabled'}}"
     (click)="setIsDeleted()">
-    <i class="material-icons">{{user.isDeleted? "check_box_outline_blank" : "check_box"}} </i>
+    <i class="material-icons">{{_user.isDeleted? "check_box_outline_blank" : "check_box"}} </i>
     &nbsp; Active
   </button>
   <br>
   <button type="button" title="Change user role (Admin/User)" class="btn flat {{isAdmin()? '' : 'disabled'}}"
     (click)="setIsAdmin()">
-    <i class="material-icons">{{user.isAdmin? "check_box" : "check_box_outline_blank"}} </i>
+    <i class="material-icons">{{_user.isAdmin? "check_box" : "check_box_outline_blank"}} </i>
     &nbsp; Admin
   </button>
   <br>
 
   <label for="createdAt">Created at</label>
-  <input type="text" id="createdAt" value="{{user.createdAt | date:'MM/dd/yyyy h:mm a'}}" readonly>
+  <input type="text" id="createdAt" value="{{_user.createdAt | date:'MM/dd/yyyy h:mm a'}}" readonly>
   <br>
   <label for="updatedAt">Updated at</label>
-  <input type="text" id="updatedAt" value="{{user.updatedAt | date:'MM/dd/yyyy h:mm a'}}" readonly>
+  <input type="text" id="updatedAt" value="{{_user.updatedAt | date:'MM/dd/yyyy h:mm a'}}" readonly>
   <br>
 
-  @if (ownProfile || isChangingPassword) {
+  @if (_ownProfile || _isChangingPassword) {
   <br>
   <fieldset>
     <legend>
-      @if (ownProfile) {
+      @if (_ownProfile) {
       <button type="button" class="btn flat" (click)="setChangePassword()">
-        <i class="material-icons">{{isChangingPassword? "check_box" : "check_box_outline_blank" }} </i>
+        <i class="material-icons">{{_isChangingPassword? "check_box" : "check_box_outline_blank" }} </i>
         &nbsp; Change password
       </button>
       } @else {
@@ -43,22 +43,21 @@
       }
     </legend>
 
-    <div [class.hidden]="!isChangingPassword">
-      @if (ownProfile) {
+    <div [class.hidden]="!_isChangingPassword">
+      @if (_ownProfile) {
       <label for="password">Current password*</label>
-      <input type="password" id="password" placeholder="Password" formControlName="password">
-      <span class="txt-error">{{ passwordOldError }}</span><br>
+      <input type="password" placeholder="Password" id="password" name="password" [(ngModel)]="_user.password">
+      <span class="txt-error">{{ _passwordOldError }}</span><br>
       }
 
       <label for="passwordNew">New password*</label>
-      <input type="password" id="passwordNew" placeholder="Password" formControlName="passwordNew">
-      <span class="txt-error">{{ passwordNewError }}</span><br>
+      <input type="password" placeholder="Password" id="passwordNew" name="passwordNew" [(ngModel)]="_user.passwordNew">
+      <span class="txt-error">{{ _passwordNewError }}</span><br>
 
       <label for="passwordCheck">Confirm new password*</label>
-      <input type="password" id="passwordCheck" placeholder="Password" formControlName="passwordCheck">
-      <span class="txt-error">{{ passwordNewError }}</span><br>
+      <input type="password" placeholder="Password" id="passwordCheck" name="passwordCheck" [(ngModel)]="_user.passwordCheck">
+      <span class="txt-error">{{ _passwordNewError }}</span><br>
     </div>
-
 
   </fieldset>
   <br>

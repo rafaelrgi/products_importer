@@ -6,7 +6,7 @@
 
 @if (this.status === PageStatus.Error) {
 <div class="txt-error">
-  {{ this.error }}
+  {{ this._error }}
 </div>
 }
 
@@ -22,31 +22,32 @@
 <table>
   <tr>
     <th width="8%">
-      <button title="Sort by Code" class="btn btn-flat" (click)="sort('id')">
+      <button title="Sort by Code" class="btn btn-flat mini" (click)="sort('id')">
         <b>Code</b>
         <i class="material-icons">{{ getSortIcon('id') }}</i>
       </button>
     </th>
-    <th width="40%">
-      <button title="Sort by Code" class="btn btn-flat" (click)="sort('name')">
+    <th width="20%">
+      <button title="Sort by Name" class="btn btn-flat mini" (click)="sort('name')">
         <b>Name</b>
         <i class="material-icons">{{ getSortIcon('name') }}</i>
       </button>
     </th>
-    <th width="20%" class="right">
-      <button title="Sort by Code" class="btn btn-flat" (click)="sort('expiration')">
+    <th width="14%"> &nbsp; </th>
+    <th width="22%" class="right">
+      <button title="Sort by Expiration" class="btn btn-flat mini" (click)="sort('expiration')">
         <b>Expiration</b>
         <i class="material-icons">{{ getSortIcon('expiration') }}</i>
       </button>
     </th>
-    <th width="8%" class="right">
-      <button title="Sort by Code" class="btn btn-flat" (click)="sort('quantity')">
+    <th width="10%" class="right">
+      <button title="Sort by Quantity" class="btn btn-flat mini" (click)="sort('quantity')">
         <b>Quantity</b>
         <i class="material-icons">{{ getSortIcon('quantity') }}</i>
       </button>
     </th>
-    <th width="14%" class="right">
-      <button title="Sort by Code" class="btn btn-flat" (click)="sort('price')">
+    <th width="16%" class="right">
+      <button title="Sort by Price" class="btn btn-flat mini" (click)="sort('price')">
         <b>Price</b>
         <i class="material-icons">{{ getSortIcon('price') }}</i>
       </button>
@@ -60,13 +61,19 @@
   <tr [class.hidden]="!_filtering"></tr> <!-- empty tr just to keep the rows color right -->
   <tr [class.hidden]="!_filtering">
     <td>&nbsp;</td>
-    <td><input type="text" placeholder="Name (starts with)" size="40" (keyup.enter)="filter()" [(ngModel)]="_name"></td>
+    <td><input type="text" placeholder="Name (starts with)" size="30" (keyup.enter)="filter()" [(ngModel)]="_name"></td>
+    <td class="center">
+      <button type="button" title="Show deleted records too" class="btn flat float-rightx" (click)="showHideDeleted()">
+        <i class="material-icons">{{_showDeleted? "check_box" : "check_box_outline_blank"}} </i>
+        &nbsp; Show deleted
+      </button>
+    </td>
     <td class="center">
       <input type="date" placeholder="Expiration" size="12" (keyup.enter)="filter()" [(ngModel)]="_expMin"> -
       <input type="date" placeholder="mm/dd/yyyy" size="12" (keyup.enter)="filter()" [(ngModel)]="_expMax">
     </td>
     <td class="center">&nbsp;</td>
-    <td class="center">
+    <td class="right">
       <input type="number" placeholder="Price" size="8" (keyup.enter)="filter()" [(ngModel)]="_priceMin"> -
       <input type="number" placeholder="Price" size="8" (keyup.enter)="filter()" [(ngModel)]="_priceMax">
     </td>
@@ -76,10 +83,10 @@
     </td>
   </tr>
 
-  @for (row of this.rows; track row.id) {
+  @for (row of this._rows; track row.id) {
   <tr>
     <td>{{ row.id }}</td>
-    <td>{{ row.name }} </td>
+    <td colspan="2">{{ row.name }} </td>
     <td class="right">{{ formatDate(row.expiration) }}</td>
     <td class="right">{{ row.quantity }}</td>
     <td class="right">{{ row.price }}</td>
@@ -87,16 +94,20 @@
       &nbsp;
       <button title="Details/Edit" class="btn btn-info icon material-icons" (click)="edit(row.id)">edit</button>
       &nbsp;
-      <button title="Block/Delete" class="btn btn-danger icon material-icons" (click)="delete(row.id)">delete</button>
+      @if(! row.isDeleted) {
+      <button title="Delete" class="btn btn-danger icon material-icons" (click)="delete(row.id)">delete</button>
+      } @else {
+      <button title="Restore" class="btn btn-warning icon material-icons" (click)="undelete(row.id)">restore_from_trash</button>
+      }
     </td>
   </tr>
-  } <!-- for (row of this.rows; track row.id) -->
+  } <!-- for (row of this._rows; track row.id) -->
 
   <!-- Pagination -->
   <tr>
     <td colspan="99" class="center">
       <br>
-      Page {{ pagination?.page }} of {{ pagination?.pageCount }} <br>
+      Page {{ _pagination?.page }} of {{ _pagination?.pageCount }} <br>
       <button title="First page" class="btn icon material-icons {{canPreviousPage()? '' : 'disabled'}}" (click)="firstPage()">
         first_page
       </button>
@@ -117,4 +128,4 @@
 
 </table>
 
-} <!-- if (this.rows) -->
+} <!-- if (this._rows) -->

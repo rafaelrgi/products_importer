@@ -27,7 +27,7 @@
     <th width="30%">Email</th>
     <th width="10%">Role</th>
     <th width="10%">Status</th>
-    <th class="btn" width="10%">
+    <th class="right" width="10%">
       <button title="Add new User" class="btn btn-success icon material-icons" (click)="add()">add</button>
     </th>
   </tr>
@@ -38,7 +38,7 @@
     <td>{{ row.email }}</td>
     <td>{{ row.isAdmin? "Admin" : "User" }}</td>
     <td>{{ row.isDeleted? "Blocked" : "Active" }}</td>
-    <td class="btn">
+    <td class="right">
       &nbsp;
       <button title="Details/Edit" class="btn btn-info icon material-icons" (click)="edit(row.id)">edit</button>
       &nbsp;
@@ -51,7 +51,30 @@
     </td>
   </tr>
   } <!-- for (row of this.row; track row.id) -->
-</table>
 
+  <!-- Pagination -->
+  <tr>
+    <td colspan="99" class="center">
+      <br>
+      Page {{ _pagination?.page }} of {{ _pagination?.pageCount }} <br>
+      <button title="First page" class="btn icon material-icons {{canPreviousPage()? '' : 'disabled'}}" (click)="firstPage()">
+        first_page
+      </button>
+      &nbsp;
+      <button title="Previous page" class="btn icon material-icons {{canPreviousPage()? '' : 'disabled'}}"
+        (click)="previousPage()"> keyboard_arrow_left
+      </button>
+      &nbsp;
+      <button title="Next page" class="btn icon material-icons {{canNextPage()? '' : 'disabled'}}" (click)="nextPage()">
+        keyboard_arrow_right
+      </button>
+      &nbsp;
+      <button title="Last page" class="btn icon material-icons {{canNextPage()? '' : 'disabled'}}" (click)="lastPage()">
+        last_page
+      </button>
+    </td>
+  </tr>
+
+</table>
 
 } <!-- if (this.row) -->
