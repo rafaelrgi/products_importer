@@ -1,10 +1,9 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { UsersService } from './../../../services/users';
 import { AuthService } from './../../../services/auth';
-import { FormService } from './../../../services/form';
 import { User } from './../../../dtos/user.dto';
 
 @Component({
@@ -25,7 +24,7 @@ export class UserForm {
   @Input() id: number = 0;
 
   constructor(private fb: FormBuilder, private usersService: UsersService, private authService: AuthService,
-    private cdRef: ChangeDetectorRef, private router: Router, private formService: FormService) { }
+    private location: Location, private cdRef: ChangeDetectorRef, private router: Router) { }
 
   ngOnInit(): void {
     this.id = Number(this.id);
@@ -84,6 +83,9 @@ export class UserForm {
     this._isChangingPassword = !this._isChangingPassword;
   }
 
+  close(): void {
+    this.location.back();
+  }
 
   onSubmit(): void {
     if (!this.validateForm())
@@ -100,7 +102,7 @@ export class UserForm {
       next: (response) => {
         alert('Record saved!');
         if (this.authService.isAdmin())
-          this.router.navigate(['/users/']);
+          this.close();
         else
           this.router.navigate(['/']);
       },

@@ -6,7 +6,7 @@
 
 @if (this.status === PageStatus.Error) {
 <div class="txt-error">
-  {{ this._error }}
+  {{ this.error }}
 </div>
 }
 
@@ -15,7 +15,7 @@
   No records found
 </div>
 <br>
-<button class="btn btn-success" (click)="add()">Add a new record</button>
+<button class="btn btn-success {{isAdmin()? '' : 'disabled'}}" (click)="add()">Add a new record</button>
 }
 
 @else if (this.status === PageStatus.Ready){
@@ -54,28 +54,30 @@
     </th>
     <th class="right" width="10%">
       <button title="Filters" class="btn icon material-icons" (click)="showHideFilters()">manage_search</button> &nbsp;
-      <button title="Add new User" class="btn btn-success icon material-icons" (click)="add()">add</button>
+      <button title="Add new User" class="btn btn-success icon material-icons {{isAdmin()? '' : 'disabled'}}" (click)="add()">
+        add
+      </button>
     </th>
   </tr>
 
-  <tr [class.hidden]="!_filtering"></tr> <!-- empty tr just to keep the rows color right -->
-  <tr [class.hidden]="!_filtering">
+  <tr [class.hidden]="!filtering"></tr> <!-- empty tr just to keep the rows color right -->
+  <tr [class.hidden]="!filtering">
     <td>&nbsp;</td>
-    <td><input type="text" placeholder="Name (starts with)" size="30" (keyup.enter)="filter()" [(ngModel)]="_name"></td>
+    <td><input type="text" placeholder="Name (starts with)" size="30" (keyup.enter)="filter()" [(ngModel)]="params.name"></td>
     <td class="center">
       <button type="button" title="Show deleted records too" class="btn flat float-rightx" (click)="showHideDeleted()">
-        <i class="material-icons">{{_showDeleted? "check_box" : "check_box_outline_blank"}} </i>
+        <i class="material-icons">{{params.showDeleted? "check_box" : "check_box_outline_blank"}} </i>
         &nbsp; Show deleted
       </button>
     </td>
     <td class="center">
-      <input type="date" placeholder="Expiration" size="12" (keyup.enter)="filter()" [(ngModel)]="_expMin"> -
-      <input type="date" placeholder="mm/dd/yyyy" size="12" (keyup.enter)="filter()" [(ngModel)]="_expMax">
+      <input type="date" placeholder="Expiration" size="12" (keyup.enter)="filter()" [(ngModel)]="params.expMin"> -
+      <input type="date" placeholder="mm/dd/yyyy" size="12" (keyup.enter)="filter()" [(ngModel)]="params.expMax">
     </td>
     <td class="center">&nbsp;</td>
     <td class="right">
-      <input type="number" placeholder="Price" size="8" (keyup.enter)="filter()" [(ngModel)]="_priceMin"> -
-      <input type="number" placeholder="Price" size="8" (keyup.enter)="filter()" [(ngModel)]="_priceMax">
+      <input type="number" placeholder="Price" size="8" (keyup.enter)="filter()" [(ngModel)]="params.priceMin"> -
+      <input type="number" placeholder="Price" size="8" (keyup.enter)="filter()" [(ngModel)]="params.priceMax">
     </td>
     <td class="right">
       <button title="Apply filters" class="btn icon btn-primary material-icons" (click)="filter()">search
@@ -83,7 +85,7 @@
     </td>
   </tr>
 
-  @for (row of this._rows; track row.id) {
+  @for (row of this.rows; track row.id) {
   <tr>
     <td>{{ row.id }}</td>
     <td colspan="2">{{ row.name }} </td>
@@ -95,19 +97,23 @@
       <button title="Details/Edit" class="btn btn-info icon material-icons" (click)="edit(row.id)">edit</button>
       &nbsp;
       @if(! row.isDeleted) {
-      <button title="Delete" class="btn btn-danger icon material-icons" (click)="delete(row.id)">delete</button>
+      <button title="Delete" class="btn btn-danger icon material-icons {{isAdmin()? '' : 'disabled'}}" (click)="delete(row.id)">
+        delete
+      </button>
       } @else {
-      <button title="Restore" class="btn btn-warning icon material-icons" (click)="undelete(row.id)">restore_from_trash</button>
+      <button title="Restore" class="btn btn-warning icon material-icons {{isAdmin()? '' : 'disabled'}}"
+        (click)="undelete(row.id)">restore_from_trash
+      </button>
       }
     </td>
   </tr>
-  } <!-- for (row of this._rows; track row.id) -->
+  } <!-- for (row of this.rows; track row.id) -->
 
   <!-- Pagination -->
   <tr>
     <td colspan="99" class="center">
       <br>
-      Page {{ _pagination?.page }} of {{ _pagination?.pageCount }} <br>
+      Page {{ pagination?.page }} of {{ pagination?.pageCount }} <br>
       <button title="First page" class="btn icon material-icons {{canPreviousPage()? '' : 'disabled'}}" (click)="firstPage()">
         first_page
       </button>

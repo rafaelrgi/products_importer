@@ -24,8 +24,4 @@
     <PackageReference Include="QuestPDF" Version="2025.12.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="src\Application\Dtos\" />
-  </ItemGroup>
-
 </Project>

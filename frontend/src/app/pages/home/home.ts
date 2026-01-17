@@ -4,6 +4,7 @@ import { ApiService } from '../../services/api';
 import { AuthService } from '../../services/auth';
 import { ApiStatus } from '../../dtos/api_status.dto';
 import { User } from './../../dtos/user.dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,8 @@ import { User } from './../../dtos/user.dto';
 export class Home implements OnInit {
   public apiStatus: ApiStatus | null = null;
 
-  constructor(private apiService: ApiService, private authService: AuthService, private cdRef: ChangeDetectorRef) { }
+  constructor(private apiService: ApiService, private authService: AuthService, private router: Router,
+    private cdRef: ChangeDetectorRef) { }
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
@@ -37,6 +39,10 @@ export class Home implements OnInit {
       },
       //error
       error: (error) => {
+        if (error.status == 401) {
+          this.router.navigate(['/login/']);
+          return;
+        }
         this.apiStatus = <ApiStatus>{
           status: `Error ${error.status}: ${error.message}`,
           baseDir: '',

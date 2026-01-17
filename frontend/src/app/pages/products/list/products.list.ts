@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, Inject, LOCALE_ID } from '@angular/core';
-import { formatDate } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { formatDate, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from './../../../services/auth';
 import { ProductsService } from './../../../services/products';
 import { PageStatus } from './../../../enums/page-status';
 import { Product } from './../../../dtos/product.dto';
 import { Pagination } from './../../../dtos/pagination.dto';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-products-list',
@@ -17,23 +17,14 @@ import { FormsModule } from '@angular/forms';
 export class ProductsList {
   PageStatus = PageStatus;
   status: PageStatus = PageStatus.None;
-  _error: string = '';
-  _rows: Product[] | null = null;
-  _sort: string = 'name';
-  _asc: boolean = true;
-  _pagination: Pagination | null = null;
-  _page: number = 1;
-  _perPage: number = 15;
-  _filtering: boolean = false;
-  _name: string = '';
-  _expMin: string = '';
-  _expMax: string = '';
-  _priceMin: string = '';
-  _priceMax: string = '';
-  _showDeleted: boolean = false;
+  error: string = '';
+  rows: Product[] | null = null;
+  pagination: Pagination | null = null;
+  filtering: boolean = false;
+  params: any | null = null;
 
   constructor(private productsService: ProductsService, private authService: AuthService,
-    private cdRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute,
+    private cdRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute, private location: Location,
     @Inject(LOCALE_ID) private locale: string) { }
 
   ngOnInit(): void {
@@ -42,24 +33,66 @@ export class ProductsList {
 
   fetch(): void {
     this.status = PageStatus.Loading;
-    this.productsService.fetchAll(
-      this._page, this._perPage, this._sort, this._asc,
-      this._name, this._priceMin, this._priceMax, this._expMin, this._expMax, this._showDeleted
-    ).subscribe({
+
+    if (!this.params)
+      this.params = this.getQueryParams();
+    const url = this.getQueryUrl();
+    //save state in the query params
+    this.location.replaceState('/products', url);
+
+    this.productsService.fetchAll(url).subscribe({
       //success
       next: (response) => {
-        this._pagination = new Pagination(response);
-        this._rows = response.data;
-        this.status = (this._pagination?.hasData ?? false) ? PageStatus.Ready : PageStatus.Empty;
+        this.pagination = new Pagination(response);
+        this.rows = response.data;
+        this.status = (this.pagination?.hasData ?? false) ? PageStatus.Ready : PageStatus.Empty;
         this.cdRef.detectChanges();
       },
       //error
       error: (error) => {
+        if (error.status == 401) {
+          this.router.navigate(['/login/']);
+          return;
+        }
         this.status = PageStatus.Error;
-        this._error = 'Error calling server: ' + (error.message || error.toString());
+        this.error = 'Error calling server: ' + (error.message || error.toString());
         this.cdRef.detectChanges();
       }
     });
+  }
+
+  getQueryUrl(): string {
+    const deleted = Number(this.params.showDeleted) ? '1' : '0'
+    const order = Number(this.params.asc) ? 'asc' : 'desc';
+    const filters =
+      (this.params.name ? `&name=${this.params.name}` : '') +
+      (this.params.priceMin ? `&priceMin=${this.params.priceMin}` : '') +
+      (this.params.priceMax ? `&priceMax=${this.params.priceMax}` : '') +
+      (this.params.expirationMin ? `&expirationMin=${this.params.expirationMin}` : '') +
+      (this.params.expirationMax ? `&expirationMax=${this.params.expirationMax}` : '');
+
+    const url = `page=${this.params.page}&perPage=${this.params.perPage}&sort=${this.params.sort}&order=${order}${filters}&showDeleted=${deleted}`;
+    return url;
+  }
+
+  getQueryParams(): any {
+    const params = {
+      page: this.route.snapshot.queryParamMap.get('page') ?? 1,
+      perPage: this.route.snapshot.queryParamMap.get('perPage') ?? 15,
+      sort: this.route.snapshot.queryParamMap.get('sort') ?? 'name',
+      asc: Number(this.route.snapshot.queryParamMap.get('asc') ?? 1),
+      name: this.route.snapshot.queryParamMap.get('name'),
+      expMin: this.route.snapshot.queryParamMap.get('expMin'),
+      expMax: this.route.snapshot.queryParamMap.get('expMax'),
+      priceMin: this.route.snapshot.queryParamMap.get('priceMin'),
+      priceMax: this.route.snapshot.queryParamMap.get('priceMax'),
+      showDeleted: Number(this.route.snapshot.queryParamMap.get('showDeleted') ?? 0),
+    };
+    return params;
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   formatDate(dt: Date): string {
@@ -68,94 +101,96 @@ export class ProductsList {
   }
 
   canPreviousPage(): boolean {
-    return this._page > 1;
+    return this.pagination!.page > 1;
   }
   canNextPage(): boolean {
-    return this._page < (this._pagination?.pageCount ?? 0);
+    return this.pagination!.page < (this.pagination!.pageCount);
   }
 
   firstPage(): void {
     if (!this.canPreviousPage()) return;
-    this._page = 1;
+    this.params.page = 1;
     this.fetch();
   }
   previousPage(): void {
     if (!this.canPreviousPage()) return;
-    this._page--;
+    this.params.page--;
     this.fetch();
   }
   nextPage(): void {
     if (!this.canNextPage()) return;
-    this._page++;
+    this.params.page++;
     this.fetch();
   }
   lastPage(): void {
     if (!this.canNextPage()) return;
-    this._page = (this._pagination?.pageCount!);
+    this.params.page = (this.pagination?.pageCount!);
     this.fetch();
   }
 
   getSortIcon(column: string): string {
-    if (this._sort !== column)
+    if (this.params.sort !== column)
       return 'swap_vert';
-    if (this._asc)
+    if (this.params.asc)
       return 'arrow_downward';
     return 'arrow_upward';
   }
 
   //"id" or "name" or "quantity" or "price" or "expiration"
   sort(column: string): void {
-    if (this._sort == column)
-      this._asc = !this._asc;
+    if (this.params.sort == column)
+      this.params.asc = !this.params.asc;
     else {
-      this._sort = column;
-      this._asc = true;
+      this.params.sort = column;
+      this.params.asc = true;
     }
 
-    this._page = 1;
+    this.params.page = 1;
     this.fetch();
   }
 
   showHideFilters(): void {
-    this._filtering = !this._filtering;
-    if (!this._filtering)
+    this.filtering = !this.filtering;
+    if (!this.filtering)
       this.clearFilters();
   }
 
   showHideDeleted(): void {
-    this._showDeleted = !this._showDeleted;
-    this._page = 1;
+    this.params.showDeleted = !this.params.showDeleted;
+    this.params.page = 1;
     this.fetch();
   }
 
   clearFilters(): void {
-    this._name = '';
-    this._expMin = '';
-    this._expMax = '';
-    this._priceMin = '';
-    this._priceMax = '';
-    this._page = 1;
+    this.params.name = '';
+    this.params.expMin = '';
+    this.params.expMax = '';
+    this.params.priceMin = '';
+    this.params.priceMax = '';
+    this.params.page = 1;
     this.fetch();
   }
 
   filter(): void {
-    this._page = 1;
+    this.params.page = 1;
     this.fetch();
   }
 
   add(): void {
-    //TODO:
+    if (!this.isAdmin())
+      return;
     this.router.navigate(['/products/0']);
   }
 
   edit(id: number): void {
-    //TODO:
     if (id <= 0)
       return;
     this.router.navigate([`/products/${id}`]);
   }
 
   delete(id: number): void {
+    if (!this.isAdmin())
+      return;
     this.status = PageStatus.Loading;
     if (!window.confirm('Are you sure you want to delete this record?'))
       return;
@@ -169,13 +204,15 @@ export class ProductsList {
       //error
       error: (error) => {
         this.status = PageStatus.Error;
-        this._error = 'Error calling server: ' + (error.message || error.toString());
+        this.error = 'Error calling server: ' + (error.message || error.toString());
         this.cdRef.detectChanges();
       }
     });
   }
 
   undelete(id: number): void {
+    if (!this.isAdmin())
+      return;
     this.status = PageStatus.Loading;
     this.productsService.undelete(id).subscribe({
       //success
@@ -186,7 +223,7 @@ export class ProductsList {
       //error
       error: (error) => {
         this.status = PageStatus.Error;
-        this._error = 'Error calling server: ' + (error.message || error.toString());
+        this.error = 'Error calling server: ' + (error.message || error.toString());
         this.cdRef.detectChanges();
       }
     });

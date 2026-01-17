@@ -123,10 +123,10 @@ namespace cs_ef.src.Infra.Repositories
       }
     }
 
-    public async Task<Product?> Find(int id, bool ignoreDeleted = true)
+    public async Task<Product?> Find(int id, bool showDeleted = true)
     {
       var qry = _db.Products.AsQueryable();
-      if (!ignoreDeleted)
+      if (showDeleted)
         qry = qry.IgnoreQueryFilters();
 
       return await qry.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
@@ -146,14 +146,15 @@ namespace cs_ef.src.Infra.Repositories
       return (await _db.SaveChangesAsync() > 0);
     }
 
-    public async Task<bool> Save(Product row)
+    public async Task<Product> Save(Product row)
     {
       if (row.Id == 0)
         await _db.Products.AddAsync(row);
       else
         _db.Products.Update(row);
 
-      return await _db.SaveChangesAsync() > 0;
+      await _db.SaveChangesAsync();
+      return row;
     }
 
   }

@@ -1,4 +1,5 @@
-﻿using cs_ef.src.Domain.Contracts;
+﻿using cs_ef.src.Application.Dtos;
+using cs_ef.src.Domain.Contracts;
 using cs_ef.src.Domain.Core;
 using cs_ef.src.Domain.Entities;
 using cs_ef.src.Reports;
@@ -42,9 +43,9 @@ namespace cs_ef.src.Web.Controllers
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Product?>> Details(int id)
+    public async Task<ActionResult<ProductDto?>> Details(int id)
     {
-      Product? row = await _service.Find(id);
+      var row = await _service.Find(id);
       if (row == null)
         return NotFound();
 
@@ -53,18 +54,16 @@ namespace cs_ef.src.Web.Controllers
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult> Create([FromBody] Product row)
+    public async Task<ActionResult> Create([FromBody] ProductDto dto)
     {
-      if (!ModelState.IsValid)
-        return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
-
       try
       {
-        if (!await _service.Save(row))
-          return BadRequest("Unable to create record");
+        var result = await _service.Save(dto);
+        if (!result.Success)
+          return BadRequest($"Unable to save record: {result.ErrorMessage}");
 
-        var uri = new Uri($"{ROUTE}/{row.Id}", UriKind.Relative);
-        return Created(uri, row);
+        var uri = new Uri($"{ROUTE}/{result.Data!.Id}", UriKind.Relative);
+        return Created(uri, result.Data!);
       }
       catch (Exception ex)
       {
@@ -75,18 +74,15 @@ namespace cs_ef.src.Web.Controllers
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult> Edit(int id, [FromBody] Product row)
+    public async Task<ActionResult> Edit(int id, [FromBody] ProductDto dto)
     {
-      if (!ModelState.IsValid)
-        return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
-
-      row.Id = id;
       try
       {
-        if (!await _service.Save(row))
-          return BadRequest("Unable to save record");
+        var result = await _service.Save(dto, id);
+        if (!result.Success)
+          return BadRequest($"Unable to save record: {result.ErrorMessage}");
 
-        return Ok(row);
+        return Ok(result.Data);
       }
       catch (Exception ex)
       {

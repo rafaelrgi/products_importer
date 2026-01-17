@@ -1,4 +1,4 @@
-﻿using cs_ef.src.Domain.Entities;
+﻿using cs_ef.src.Application.Dtos;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -8,9 +8,9 @@ namespace cs_ef.src.Reports
 {
   public class ProductsReport : IDocument
   {
-    readonly IEnumerable<Product> _rows;
+    readonly IEnumerable<ProductDto> _rows;
 
-    public ProductsReport(IEnumerable<Product> rows)
+    public ProductsReport(IEnumerable<ProductDto> rows)
     {
       _rows = rows;
     }
