@@ -3,7 +3,6 @@ using cs_ef.src.Domain.Common;
 using cs_ef.src.Domain.Contracts;
 using cs_ef.src.Domain.Core;
 using cs_ef.src.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
 
 namespace cs_ef.src.Application.Services
 {
@@ -74,16 +73,9 @@ namespace cs_ef.src.Application.Services
       ProductFromDto(row, dto);
       row!.Id = id;
 
-      //UNDONE: base service? base entity?
-      var results = new List<ValidationResult>();
-      var context = new ValidationContext(row, serviceProvider: null, items: null);
-      if (!Validator.TryValidateObject(row, context, results, validateAllProperties: true))
-      {
-        string s = string.Join(" \r\n", results);
-        if (string.IsNullOrWhiteSpace(s))
-          s = "The object is invalid.";
-        return new(null, false, false, s);
-      }
+      var errors = Product.Validate(row);
+      if (!string.IsNullOrEmpty(errors))
+        return new(null, false, false, errors);
 
       var result = ProductToDto(await _repository.Save(row));
       return new(result, true);
