@@ -22,8 +22,8 @@ namespace cs_ef.src.Application.Services
     }
 
     public async Task<List<ProductDto>> FindAll(
-        string? sort, string? order,
-        string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax)
+        string? sort = "name", string? order = "asc",
+        string? name = null, decimal? priceMin = null, decimal? priceMax = null, DateTime? expirationMin = null, DateTime? expirationMax = null)
     {
       (sort, order) = SortOrderParams(sort, order);
       var rows = await _repository.FindAll(sort, order, name, priceMin, priceMax, expirationMin, expirationMax);
@@ -75,10 +75,10 @@ namespace cs_ef.src.Application.Services
 
       var errors = Product.Validate(row);
       if (!string.IsNullOrEmpty(errors))
-        return new(null, false, false, errors);
+        return new(ErrorMessage: errors);
 
       var result = ProductToDto(await _repository.Save(row));
-      return new(result, true);
+      return new(result);
     }
 
     private Pagination<ProductDto> ProductsToDto(Pagination<Product> rows)

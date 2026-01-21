@@ -19,7 +19,7 @@ namespace cs_ef.src.Infra.Repositories
 
     public async Task<List<Product>> FindAll(
         string sort, string order,
-        string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax
+        string? name = null, decimal? priceMin = null, decimal? priceMax = null, DateTime? expirationMin = null, DateTime? expirationMax = null
     )
     {
       var qry = _db.Products.AsQueryable();
@@ -36,7 +36,7 @@ namespace cs_ef.src.Infra.Repositories
 
     public async Task<Pagination<Product>> FindAllPaginated(
         int page, int perPage, string sort, string order,
-        string? name, decimal? priceMin, decimal? priceMax, DateTime? expirationMin, DateTime? expirationMax, bool showDeleted
+        string? name = null, decimal? priceMin = null, decimal? priceMax = null, DateTime? expirationMin = null, DateTime? expirationMax = null, bool showDeleted = false
     )
     {
       var qry = _db.Products.AsQueryable();
