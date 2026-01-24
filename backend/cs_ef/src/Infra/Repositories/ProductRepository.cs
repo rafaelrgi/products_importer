@@ -64,8 +64,75 @@ namespace cs_ef.src.Infra.Repositories
       result.RecordCount = totalRecords;
       result.Page = page;
       result.PerPage = perPage;
-      result.PageCount = (result.PerPage > 0 ? result.RecordCount / result.PerPage : 0) + (result.HasData ? 1 : 0);
+      result.PageCount = result.RecordCount / result.PerPage;
       return result;
+    }
+
+    public async Task<bool> SaveProducts(Product[] products, int count)
+    {
+      int n = 0;
+      foreach (var product in products)
+      {
+        if (product == null)
+          continue;
+        if (product.Id == 0)
+          await _db.Products.AddAsync(product);
+        else
+          _db.Products.Update(product);
+        if (++n >= count)
+          break;
+      }
+
+      try
+      {
+        await _db.SaveChangesAsync();
+        _db.ChangeTracker.Clear();
+        return true;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex.ToString());
+        return false;
+      }
+    }
+
+    public async Task<Product?> Find(int id, bool showDeleted = false)
+    {
+      var qry = _db.Products.AsQueryable();
+      if (showDeleted)
+        qry = qry.IgnoreQueryFilters();
+
+      return await qry.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<bool> Delete(Product row)
+    {
+      row.DeletedAt = DateTime.Now;
+      _db.Products.Update(row);
+      var result = (await _db.SaveChangesAsync() > 0);
+      _db.Entry(row).State = EntityState.Detached;
+      return result;
+    }
+
+    public async Task<bool> UnDelete(Product row)
+    {
+      row.DeletedAt = null;
+      _db.Products.Update(row);
+      var result = (await _db.SaveChangesAsync() > 0);
+      _db.Entry(row).State = EntityState.Detached;
+      return result;
+    }
+
+    public async Task<Product> Save(Product row)
+    {
+      if (row.Id == 0)
+        await _db.Products.AddAsync(row);
+      else
+        _db.Products.Update(row);
+
+      await _db.SaveChangesAsync();
+      _db.Entry(row).State = EntityState.Detached;
+      return row;
     }
 
     private static IQueryable<Product> _ApplyOrderBy(string sort, string order, IQueryable<Product> qry)
@@ -94,67 +161,6 @@ namespace cs_ef.src.Infra.Repositories
       if (expirationMax != null)
         qry = qry.Where(x => x.Expiration >= expirationMax);
       return qry;
-    }
-
-    public async Task<bool> SaveProducts(Product[] products, int count)
-    {
-      int n = 0;
-      foreach (var product in products)
-      {
-        if (product == null)
-          continue;
-        if (product.Id == 0)
-          await _db.Products.AddAsync(product);
-        else
-          _db.Products.Update(product);
-        if (++n >= count)
-          break;
-      }
-
-      try
-      {
-        await _db.SaveChangesAsync();
-        return true;
-      }
-      catch (Exception ex)
-      {
-        _logger.LogError(ex.ToString());
-        return false;
-      }
-    }
-
-    public async Task<Product?> Find(int id, bool showDeleted = true)
-    {
-      var qry = _db.Products.AsQueryable();
-      if (showDeleted)
-        qry = qry.IgnoreQueryFilters();
-
-      return await qry.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
-    }
-
-    public async Task<bool> Delete(Product row)
-    {
-      row.DeletedAt = DateTime.Now;
-      _db.Products.Update(row);
-      return (await _db.SaveChangesAsync() > 0);
-    }
-
-    public async Task<bool> UnDelete(Product row)
-    {
-      row.DeletedAt = null;
-      _db.Products.Update(row);
-      return (await _db.SaveChangesAsync() > 0);
-    }
-
-    public async Task<Product> Save(Product row)
-    {
-      if (row.Id == 0)
-        await _db.Products.AddAsync(row);
-      else
-        _db.Products.Update(row);
-
-      await _db.SaveChangesAsync();
-      return row;
     }
 
   }

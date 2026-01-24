@@ -3,8 +3,6 @@ root = true
 
 # C# files
 [*.cs]
-
-#### Core EditorConfig Options ####
 # Indentation and spacing
 indent_size = 2
 indent_style = space

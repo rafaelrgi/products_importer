@@ -43,9 +43,9 @@ namespace cs_ef.src.Web.Controllers
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ProductDto?>> Details(int id)
+    public async Task<ActionResult<ProductDto?>> Details(int id, bool showDeleted = false)
     {
-      var row = await _service.Find(id);
+      var row = await _service.Find(id, showDeleted);
       if (row == null)
         return NotFound();
 

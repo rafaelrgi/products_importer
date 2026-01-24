@@ -15,7 +15,7 @@ namespace cs_ef.src.Application.Services
       _repository = repository;
     }
 
-    public async Task<ProductDto?> Find(int id, bool showDeleted = true)
+    public async Task<ProductDto?> Find(int id, bool showDeleted = false)
     {
       var row = await _repository.Find(id, showDeleted);
       return ProductToDto(row);
@@ -69,7 +69,7 @@ namespace cs_ef.src.Application.Services
 
     public async Task<Result<ProductDto>> Save(ProductDto dto, int id = 0)
     {
-      Product? row = (id > 0) ? await _repository.Find(id) : new Product();
+      Product? row = (id > 0) ? await _repository.Find(id, true) : new Product();
       ProductFromDto(row, dto);
       row!.Id = id;
 

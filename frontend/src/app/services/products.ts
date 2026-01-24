@@ -18,7 +18,7 @@ export class ProductsService {
   }
 
   fetch(id: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/products/${id}`);
+    return this.http.get<any>(`${environment.apiUrl}/products/${id}?showDeleted=true`);
   }
 
   delete(id: number): Observable<any> {

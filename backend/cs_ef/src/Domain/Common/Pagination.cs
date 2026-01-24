@@ -7,7 +7,7 @@
     public int PageCount { get; set; }
     public int RecordCount { get; set; }
     public bool HasData { get { return Data != null && Data.Any(); } }
-    public IEnumerable<T>? Data { get; set; } = null;
-        
+    public List<T>? Data { get; set; } = null;
+
   }
 }
