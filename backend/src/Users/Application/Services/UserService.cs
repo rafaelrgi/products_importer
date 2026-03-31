@@ -1,10 +1,11 @@
 ﻿using Users.src.Application.Dtos;
+using Users.src.Application.Services;
 using Users.src.Domain.Common;
 using Users.src.Domain.Contracts;
 using Users.src.Domain.Core;
 using Users.src.Domain.Entities;
 
-namespace Users.src.Application.Services
+namespace Users.Application.Services
 {
   public class UserService(IUserRepository repository) : IUserService
   {

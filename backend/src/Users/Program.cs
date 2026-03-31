@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Users.Application.Services;
 using Users.src.Application.Services;
 using Users.src.Domain.Contracts;
 using Users.src.Infra.Repositories;
