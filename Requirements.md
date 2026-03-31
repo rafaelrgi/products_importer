@@ -1,4 +1,4 @@
-# Flatirons Full-Stack Developer Coding Test
+# Full-Stack Developer Coding Test
 
 ## Requirements:
 
