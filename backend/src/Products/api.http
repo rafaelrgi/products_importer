@@ -1,0 +1,46 @@
+### Variáveis
+#@users = http://localhost:5001
+@users = http://localhost:8080
+@url = http://localhost:5000
+
+### Login para obter o Token
+# @name login
+POST {{users}}/api/auth
+Content-Type: application/json
+
+{
+  "email": "admin@email.com",
+  "password": "1234"
+}
+
+### Armazenar o Token da resposta acima
+@authToken = {{login.response.body.token}}
+
+
+### List Products
+GET {{url}}/api/products
+Authorization: Bearer {{authToken}}
+
+### Product details
+GET {{url}}/api/products/1
+Authorization: Bearer {{authToken}}
+
+### Create Product
+POST {{url}}/api/products
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "SSD Sata 3",
+  "quantity": 50,
+  "price": 89.90,
+  "expiration": "2027-12-31T23:59:59Z",
+  "brl": 450.50,
+  "eur": 75.20,
+  "cad": 110.15,
+  "mxn": 1500.00,
+  "gbp": 65.40,
+  "isDeleted": false,
+  "createdAt": "2026-02-19T20:00:00Z",
+  "updatedAt": null
+}
