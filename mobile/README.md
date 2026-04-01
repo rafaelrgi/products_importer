@@ -1,4 +1,4 @@
-# Products Importer Frontend (Flutter)
+# Products Importer Mobile (Flutter)
 
 A modern, cross-platform mobile application built with Flutter, designed to facilitate the upload of large product data files to the backend and display high-volume datasets efficiently.
 
